@@ -1,0 +1,636 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { foodGuides } from '../data/foodGuides';
+import { site } from '../data/site';
+
+const title = '幾米公園附近美食｜價格、份量與熱量參考';
+const description = '整理宜蘭幾米公園與宜蘭火車站附近 5 個美食選擇，包含步行時間、參考價格、常見份量熱量估算、點餐建議與地圖。';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '幾米公園附近美食',
+  description,
+  numberOfItems: foodGuides.length,
+  itemListElement: foodGuides.map((food, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    url: `${site.url}/food#${food.id}`,
+    name: food.name,
+    item: {
+      '@type': 'FoodEstablishment',
+      name: food.name,
+      address: food.address,
+      hasMap: food.mapUrl,
+    },
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} image="/images/food/xiaolongbao.jpg">
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <header class="fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/92 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="/" class="group flex items-center gap-3" aria-label="回到幾米公園首頁">
+        <span class="grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f0bf48" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/60">附近美食</span>
+        </span>
+      </a>
+      <nav class="flex items-center gap-2 text-sm font-bold">
+        <a href="/route" class="hidden rounded-full px-4 py-2 text-forest transition hover:bg-forest/7 sm:inline-flex">散步路線</a>
+        <a href="/" class="rounded-full bg-forest px-4 py-2 text-white transition hover:bg-forest-dark">回首頁</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="food-page overflow-hidden pt-[4.5rem]">
+    <section class="food-hero relative bg-[#f6eddd] px-4 py-14 sm:py-20 lg:py-24">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="food-doodle food-doodle-one">✦</span>
+        <span class="food-doodle food-doodle-two">○</span>
+        <span class="food-doodle food-doodle-three">⌁</span>
+      </div>
+
+      <div class="container-shell relative grid items-center gap-12 lg:grid-cols-[.92fr_1.08fr] lg:gap-20">
+        <div>
+          <p class="section-kicker">散步後吃什麼</p>
+          <h1 class="mt-5 max-w-3xl text-5xl font-bold leading-[1.08] tracking-tight text-forest-dark sm:text-6xl">
+            幾米公園<br /><span class="text-coral">附近美食</span>
+          </h1>
+          <p class="mt-5 text-lg font-bold tracking-[.08em] text-forest">從公園走出去，吃一口宜蘭。</p>
+          <p class="mt-7 max-w-2xl text-lg leading-8 text-ink/68">
+            不只列店名，也把步行時間、實際點餐份量、參考價格與熱量估算放在一起。先看今天想走多遠，再決定吃一碗、分一籠，或帶杯冰沙回車站。
+          </p>
+
+          <div class="mt-8 flex flex-wrap gap-2" aria-label="快速前往美食分類">
+            <a href="#da-mian-zhang" class="food-chip">5 分鐘吃碗麵</a>
+            <a href="#dongmen-night-market" class="food-chip">傍晚逛夜市</a>
+            <a href="#zhenghao-xiaolongbao" class="food-chip">午間小籠包</a>
+            <a href="#beimen-mung-bean" class="food-chip">回程喝冰沙</a>
+          </div>
+        </div>
+
+        <div class="food-collage relative mx-auto w-full max-w-2xl pb-8 sm:pb-12">
+          <figure class="food-collage-main">
+            <img
+              src="/images/food/xiaolongbao.jpg"
+              alt="一籠小籠包的餐點示意照片"
+              width="1280"
+              height="856"
+              loading="eager"
+              fetchpriority="high"
+            />
+            <figcaption>午間人氣・一籠剛好是一餐</figcaption>
+          </figure>
+          <figure class="food-collage-small food-collage-noodle">
+            <img src="/images/food/dry-noodles.jpg" alt="" width="1280" height="960" loading="eager" />
+          </figure>
+          <figure class="food-collage-small food-collage-ice">
+            <img src="/images/food/mung-bean-ice.jpg" alt="" width="960" height="1282" loading="eager" />
+          </figure>
+          <span class="food-collage-note" aria-hidden="true">走走・吃吃・慢慢來</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y border-forest/10 bg-[#fffdf7] px-4 py-9">
+      <div class="container-shell">
+        <div class="grid gap-4 md:grid-cols-[auto_1fr] md:items-start md:gap-7">
+          <span class="inline-flex w-fit rounded-full bg-sun/35 px-4 py-2 text-xs font-bold tracking-[.12em] text-forest-dark">先看說明</span>
+          <div>
+            <p class="font-bold leading-7 text-forest-dark">價格是查到的菜單參考；熱量是依常見份量估算，並非店家官方營養標示。</p>
+            <p class="mt-1 text-sm leading-6 text-ink/58">現場價格、份量、營業日與售完時間都可能調整；有糖分、乳製品、過敏原或飲食控制需求，請直接向店家確認。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#edf3ed] px-4 py-16 sm:py-20">
+      <div class="container-shell">
+        <div class="max-w-3xl">
+          <p class="section-kicker">一眼比較</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">先用預算與份量做決定</h2>
+          <p class="mt-4 leading-7 text-ink/62">手機可左右滑動表格；點店名會直接移到完整介紹。</p>
+        </div>
+
+        <div class="mt-9 overflow-x-auto rounded-[1.6rem] border border-forest/10 bg-white/80 shadow-sm">
+          <table class="food-table w-full min-w-[760px] text-left">
+            <caption class="sr-only">幾米公園附近美食的步行時間、價格與估算熱量比較</caption>
+            <thead>
+              <tr>
+                <th scope="col">選擇</th>
+                <th scope="col">代表餐點</th>
+                <th scope="col">步行</th>
+                <th scope="col">參考價格</th>
+                <th scope="col">估算熱量</th>
+              </tr>
+            </thead>
+            <tbody>
+              {foodGuides.map((food) => (
+                <tr>
+                  <th scope="row"><a href={`#${food.id}`}>{food.name}</a></th>
+                  <td>{food.featuredDish}</td>
+                  <td>{food.walk.replace('由宜蘭站步行約 ', '')}</td>
+                  <td class="font-bold text-forest-dark">{food.price}</td>
+                  <td>{food.calories}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#fffdf7] px-4 py-16 sm:py-24">
+      <div class="container-shell">
+        <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p class="section-kicker">五個具體選擇</p>
+            <h2 class="mt-4 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">照今天的胃口排路線</h2>
+          </div>
+          <p class="max-w-lg text-sm leading-6 text-ink/56">每張餐點圖均清楚標示用途。圖片用來幫助理解食物類型，不代表店家當日實際出餐。</p>
+        </div>
+
+        <div class="mt-12 space-y-9">
+          {foodGuides.map((food, index) => (
+            <article
+              id={food.id}
+              class:list={['food-card scroll-mt-24', index % 2 === 1 && 'food-card-reverse']}
+              style={`--food-accent:${food.accent}`}
+            >
+              <figure class="food-card-image">
+                <img
+                  src={food.image}
+                  alt={food.imageAlt}
+                  width={food.imageWidth}
+                  height={food.imageHeight}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <figcaption>{food.imageNote}</figcaption>
+              </figure>
+
+              <div class="food-card-copy">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="food-category">{food.category}</span>
+                  <span class="text-xs font-bold text-ink/45">{food.walk}</span>
+                </div>
+                <h3 class="mt-4 text-3xl font-bold tracking-tight text-forest-dark sm:text-4xl">{food.name}</h3>
+                <p class="mt-2 text-lg font-bold" style={`color:${food.accent}`}>{food.featuredDish}</p>
+                <p class="mt-5 leading-7 text-ink/65">{food.summary}</p>
+
+                <dl class="mt-7 grid gap-3 sm:grid-cols-2">
+                  <div class="food-metric">
+                    <dt>參考價格</dt>
+                    <dd>{food.price}</dd>
+                  </div>
+                  <div class="food-metric">
+                    <dt>估算熱量</dt>
+                    <dd>{food.calories}</dd>
+                  </div>
+                </dl>
+
+                <div class="mt-5 rounded-2xl bg-[#f7f1e7] p-4 text-sm leading-6 text-ink/62">
+                  <p><strong class="text-forest-dark">估算口徑：</strong>{food.calorieBasis}</p>
+                </div>
+
+                <div class="mt-6 grid gap-4 border-t border-forest/10 pt-6 sm:grid-cols-2">
+                  <div>
+                    <p class="text-xs font-bold tracking-[.12em] text-ink/42">點餐方式</p>
+                    <p class="mt-2 text-sm leading-6 text-ink/62">{food.orderTip}</p>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold tracking-[.12em] text-ink/42">安排時段</p>
+                    <p class="mt-2 text-sm leading-6 text-ink/62">{food.timing}</p>
+                  </div>
+                </div>
+
+                <p class="mt-5 flex items-start gap-2 text-sm leading-6 text-ink/55">
+                  <svg viewBox="0 0 24 24" class="mt-0.5 size-5 shrink-0 text-coral" aria-hidden="true">
+                    <path d="M12 21s7-5.4 7-12a7 7 0 1 0-14 0c0 6.6 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                    <circle cx="12" cy="9" r="2.3" fill="currentColor" />
+                  </svg>
+                  {food.address}
+                </p>
+
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <a href={food.mapUrl} target="_blank" rel="noopener noreferrer" class="food-primary-link">
+                    在 Google 地圖查看
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                  <a href={food.sourceUrl} target="_blank" rel="noopener noreferrer" class="food-secondary-link">
+                    {food.sourceLabel}
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#f4eadb] px-4 py-16 sm:py-20">
+      <div class="container-shell grid gap-8 lg:grid-cols-[.85fr_1.15fr] lg:items-start lg:gap-16">
+        <div>
+          <p class="section-kicker">怎麼安排</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight text-forest-dark">把吃飯接進散步，才不會一直折返</h2>
+          <a href="/route" class="mt-7 inline-flex rounded-full bg-forest px-6 py-3 text-sm font-bold text-white transition hover:bg-forest-dark">查看完整散步路線</a>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3">
+          <article class="food-plan">
+            <span>01</span>
+            <h3>只停 1 小時</h3>
+            <p>先逛幾米公園，回站前走到大麵章；若店還沒開始營業，就保留到傍晚。</p>
+          </article>
+          <article class="food-plan">
+            <span>02</span>
+            <h3>舊城半日</h3>
+            <p>把正好小籠包、北門綠豆沙排進舊城方向，一路走，不必吃完再回頭。</p>
+          </article>
+          <article class="food-plan">
+            <span>03</span>
+            <h3>傍晚才到</h3>
+            <p>先看車站與丟丟噹森林亮燈，再往東門夜市，以小份嘟好燒當共享點心。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-[#20382f] px-4 py-16 text-white sm:py-20">
+      <div class="container-shell grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
+        <div>
+          <p class="text-sm font-bold tracking-[.18em] text-[#f6d56f]">資訊來源與照片授權</p>
+          <h2 class="mt-4 text-3xl font-bold sm:text-4xl">可以查，也可以追溯</h2>
+          <p class="mt-4 max-w-xl text-sm leading-7 text-white/62">餐點與價格連結至店家或近期資料來源；照片採 Wikimedia Commons 可重用作品並保留作者與授權連結。</p>
+        </div>
+        <div class="grid gap-3">
+          {foodGuides.map((food) => (
+            <details class="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <summary class="cursor-pointer font-bold text-white">{food.name}</summary>
+              <div class="mt-4 space-y-2 text-sm leading-6 text-white/60">
+                <p><a href={food.sourceUrl} target="_blank" rel="noopener noreferrer" class="underline decoration-white/25 underline-offset-4 hover:text-white">餐點與價格：{food.sourceLabel}</a></p>
+                <p><a href={food.imageCredit.url} target="_blank" rel="noopener noreferrer" class="underline decoration-white/25 underline-offset-4 hover:text-white">示意照片：{food.imageCredit.author}・{food.imageCredit.license}</a></p>
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#162a23] px-4 py-10 text-white/65">
+    <div class="container-shell flex flex-col justify-between gap-5 text-sm sm:flex-row sm:items-center">
+      <p>© JimmyPark.org・幾米公園附近美食</p>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="頁尾導覽">
+        <a href="/" class="hover:text-white">首頁</a>
+        <a href="/route" class="hover:text-white">散步路線</a>
+        <a href="/photo-guide" class="hover:text-white">拍照指南</a>
+        <a href="/privacy" class="hover:text-white">隱私與聲明</a>
+      </nav>
+    </div>
+  </footer>
+</BaseLayout>
+
+<style>
+  .food-page {
+    color: var(--color-ink);
+  }
+
+  .food-hero::after {
+    position: absolute;
+    right: -4rem;
+    bottom: -6rem;
+    width: 22rem;
+    height: 22rem;
+    border: 2px dashed rgb(60 113 99 / .12);
+    border-radius: 48% 52% 43% 57%;
+    content: '';
+    transform: rotate(-12deg);
+  }
+
+  .food-doodle {
+    position: absolute;
+    color: rgb(217 120 96 / .28);
+    font-family: serif;
+    font-size: 2.5rem;
+  }
+
+  .food-doodle-one { top: 12%; left: 4%; transform: rotate(-12deg); }
+  .food-doodle-two { right: 4%; top: 18%; color: rgb(60 113 99 / .2); font-size: 5rem; }
+  .food-doodle-three { bottom: 10%; left: 43%; color: rgb(197 144 51 / .25); font-size: 5rem; }
+
+  .food-chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgb(60 113 99 / .13);
+    border-radius: 999px;
+    background: rgb(255 255 255 / .64);
+    padding: .65rem 1rem;
+    color: var(--color-forest);
+    font-size: .8rem;
+    font-weight: 700;
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .food-chip:hover {
+    background: white;
+    transform: translateY(-2px);
+  }
+
+  .food-collage-main {
+    position: relative;
+    z-index: 1;
+    margin-left: auto;
+    width: 82%;
+    overflow: hidden;
+    border: .65rem solid #fffdf7;
+    border-radius: 3rem 2rem 3.7rem 2.2rem;
+    background: #fffdf7;
+    box-shadow: 0 24px 70px rgb(64 52 36 / .18);
+    transform: rotate(2deg);
+  }
+
+  .food-collage-main img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .food-collage-main figcaption {
+    padding: .9rem 1rem .4rem;
+    color: rgb(42 52 48 / .62);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+
+  .food-collage-small {
+    position: absolute;
+    z-index: 2;
+    overflow: hidden;
+    border: .4rem solid #fffdf7;
+    background: #fffdf7;
+    box-shadow: 0 18px 45px rgb(64 52 36 / .17);
+  }
+
+  .food-collage-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .food-collage-noodle {
+    bottom: 0;
+    left: 0;
+    width: 34%;
+    aspect-ratio: 1;
+    border-radius: 1.5rem 2.7rem 1.7rem 2.4rem;
+    transform: rotate(-7deg);
+  }
+
+  .food-collage-ice {
+    right: -2%;
+    bottom: -1rem;
+    width: 25%;
+    aspect-ratio: .78;
+    border-radius: 2rem 1.3rem 2.4rem 1.6rem;
+    transform: rotate(7deg);
+  }
+
+  .food-collage-note {
+    position: absolute;
+    z-index: 3;
+    right: 7%;
+    top: -1rem;
+    border-radius: .4rem;
+    background: #f4d36c;
+    padding: .6rem 1.1rem;
+    color: #355d52;
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    transform: rotate(5deg);
+  }
+
+  .food-table th,
+  .food-table td {
+    border-bottom: 1px solid rgb(60 113 99 / .1);
+    padding: 1.1rem 1.25rem;
+    vertical-align: top;
+  }
+
+  .food-table thead th {
+    background: rgb(60 113 99 / .08);
+    color: rgb(42 52 48 / .55);
+    font-size: .72rem;
+    letter-spacing: .1em;
+  }
+
+  .food-table tbody tr:last-child th,
+  .food-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .food-table tbody th a {
+    color: var(--color-forest);
+    font-weight: 800;
+    text-decoration: underline;
+    text-decoration-color: rgb(60 113 99 / .25);
+    text-underline-offset: .3rem;
+  }
+
+  .food-card {
+    display: grid;
+    overflow: hidden;
+    border: 1px solid rgb(60 113 99 / .11);
+    border-radius: 2.2rem;
+    background: white;
+    box-shadow: 0 18px 60px rgb(42 52 48 / .07);
+  }
+
+  .food-card-image {
+    position: relative;
+    min-height: 20rem;
+    overflow: hidden;
+    background: #e7ded1;
+  }
+
+  .food-card-image img {
+    width: 100%;
+    height: 100%;
+    min-height: 20rem;
+    object-fit: cover;
+    transition: transform .6s ease;
+  }
+
+  .food-card:hover .food-card-image img {
+    transform: scale(1.025);
+  }
+
+  .food-card-image figcaption {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    max-width: calc(100% - 2rem);
+    border: 1px solid rgb(255 255 255 / .4);
+    border-radius: 999px;
+    background: rgb(27 48 42 / .78);
+    padding: .55rem .85rem;
+    color: white;
+    font-size: .68rem;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+  }
+
+  .food-card-copy {
+    padding: 1.6rem;
+  }
+
+  .food-category {
+    display: inline-flex;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--food-accent) 13%, white);
+    padding: .45rem .75rem;
+    color: var(--food-accent);
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+  }
+
+  .food-metric {
+    border-left: .25rem solid var(--food-accent);
+    border-radius: .8rem 1rem 1rem .8rem;
+    background: color-mix(in srgb, var(--food-accent) 7%, white);
+    padding: 1rem;
+  }
+
+  .food-metric dt {
+    color: rgb(42 52 48 / .47);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+  }
+
+  .food-metric dd {
+    margin-top: .35rem;
+    color: var(--color-forest-dark);
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1.5;
+  }
+
+  .food-primary-link,
+  .food-secondary-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .45rem;
+    border-radius: 999px;
+    padding: .8rem 1.15rem;
+    font-size: .78rem;
+    font-weight: 800;
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .food-primary-link {
+    background: var(--food-accent);
+    color: white;
+  }
+
+  .food-secondary-link {
+    border: 1px solid rgb(60 113 99 / .18);
+    color: var(--color-forest);
+  }
+
+  .food-primary-link:hover,
+  .food-secondary-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .food-secondary-link:hover {
+    background: rgb(60 113 99 / .06);
+  }
+
+  .food-plan {
+    min-height: 15rem;
+    border: 1px solid rgb(60 113 99 / .1);
+    border-radius: 1.7rem;
+    background: rgb(255 253 247 / .78);
+    padding: 1.5rem;
+  }
+
+  .food-plan span {
+    display: grid;
+    width: 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-sun);
+    color: var(--color-forest-dark);
+    font-size: .72rem;
+    font-weight: 800;
+  }
+
+  .food-plan h3 {
+    margin-top: 1.5rem;
+    color: var(--color-forest-dark);
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  .food-plan p {
+    margin-top: .7rem;
+    color: rgb(42 52 48 / .62);
+    font-size: .86rem;
+    line-height: 1.75;
+  }
+
+  @media (min-width: 768px) {
+    .food-card {
+      grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    }
+
+    .food-card-reverse {
+      grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+    }
+
+    .food-card-reverse .food-card-image {
+      order: 2;
+    }
+
+    .food-card-copy {
+      padding: 2.4rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .food-card-image,
+    .food-card-image img {
+      min-height: 38rem;
+    }
+
+    .food-card-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3.5rem;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .food-doodle-two { display: none; }
+    .food-collage-main { width: 88%; }
+    .food-collage-noodle { width: 38%; }
+    .food-collage-ice { right: 0; width: 27%; }
+    .food-collage-note { right: 2%; }
+    .food-card { border-radius: 1.6rem; }
+  }
+</style>

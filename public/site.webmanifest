@@ -1,0 +1,12 @@
+{
+  "name": "宜蘭幾米公園旅遊指南",
+  "short_name": "JimmyPark.org",
+  "lang": "zh-Hant-TW",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff7e7",
+  "theme_color": "#3c7163",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

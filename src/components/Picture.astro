@@ -1,0 +1,46 @@
+---
+interface Props {
+  name: string;
+  alt: string;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  sizes?: string;
+  width?: number;
+  height?: number;
+}
+
+const {
+  name,
+  alt,
+  class: className = '',
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  width,
+  height,
+} = Astro.props;
+
+const dimensions: Record<string, readonly [number, number]> = {
+  hero: [1440, 960],
+  'plaza-walkway': [1440, 1080],
+  'plaza-suitcase': [1440, 1080],
+  'forest-train': [1440, 1080],
+  'happy-station': [1440, 1080],
+  'station-evening': [1440, 810],
+};
+const [defaultWidth, defaultHeight] = dimensions[name] ?? [1440, 960];
+---
+
+<img
+  src={`/images/${name}-960.webp`}
+  srcset={`/images/${name}-640.webp 640w, /images/${name}-960.webp 960w, /images/${name}-1440.webp 1440w`}
+  {sizes}
+  {alt}
+  {loading}
+  decoding="async"
+  {fetchpriority}
+  width={width ?? defaultWidth}
+  height={height ?? defaultHeight}
+  class={className}
+/>

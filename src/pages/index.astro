@@ -1,0 +1,644 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Picture from '../components/Picture.astro';
+import {
+  site,
+  quickFacts,
+  routes,
+  highlights,
+  faqs,
+  photoCredits,
+} from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${site.url}/#website`,
+      url: site.url,
+      name: 'JimmyPark.org',
+      inLanguage: 'zh-Hant-TW',
+    },
+    {
+      '@type': 'WebPage',
+      '@id': `${site.url}/#webpage`,
+      url: `${site.url}/`,
+      name: '宜蘭幾米公園攻略｜交通、拍照與散步路線',
+      description: site.description,
+      isPartOf: { '@id': `${site.url}/#website` },
+      about: { '@id': `${site.url}/#attraction` },
+      inLanguage: 'zh-Hant-TW',
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: `${site.url}/images/og-jimmypark.jpg`,
+        width: 1200,
+        height: 630,
+      },
+    },
+    {
+      '@type': 'TouristAttraction',
+      '@id': `${site.url}/#attraction`,
+      name: '幾米主題廣場（幾米公園）',
+      alternateName: ['幾米廣場', '宜蘭幾米公園'],
+      description:
+        '位於宜蘭火車站旁的戶外公共藝術空間，結合舊鐵路宿舍、城市景觀與繪本主題裝置。',
+      image: [
+        `${site.url}/images/hero-1440.webp`,
+        `${site.url}/images/plaza-walkway-1440.webp`,
+        `${site.url}/images/forest-train-1440.webp`,
+      ],
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '宜興路一段 240 號一帶',
+        addressLocality: '宜蘭市',
+        addressRegion: '宜蘭縣',
+        postalCode: '260',
+        addressCountry: 'TW',
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: site.latitude,
+        longitude: site.longitude,
+      },
+      isAccessibleForFree: true,
+      publicAccess: true,
+      openingHours: 'Mo-Su 00:00-23:59',
+      touristType: ['親子旅客', '情侶', '攝影愛好者', '鐵道旅客'],
+    },
+  ],
+};
+---
+
+<BaseLayout>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="#top" class="group flex items-center gap-3" aria-label="JimmyPark.org 首頁">
+        <span class="storybook-logo grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f0bf48" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/65">幾米公園</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-5 text-sm font-medium text-ink/70 lg:flex" aria-label="主要導覽">
+        <a class="transition hover:text-forest" href="#overview">行前速覽</a>
+        <a class="transition hover:text-forest" href="#route">散步路線</a>
+        <a class="transition hover:text-forest" href="#highlights">必看景點</a>
+        <a class="transition hover:text-forest" href="/food">附近美食</a>
+        <a class="transition hover:text-forest" href="#transport">交通停車</a>
+        <a class="transition hover:text-forest" href="#faq">常見問題</a>
+        <a class="font-bold text-coral transition hover:text-forest" href="/postcard">製作紀念卡</a>
+      </nav>
+
+      <div class="flex items-center gap-2 lg:hidden">
+        <button
+          id="menu-button"
+          type="button"
+          class="grid size-11 place-items-center rounded-full border border-forest/15 bg-white/70 text-forest lg:hidden"
+          aria-controls="mobile-nav"
+          aria-expanded="false"
+          aria-label="開啟導覽選單"
+        >
+          <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
+            <path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <nav id="mobile-nav" hidden class="border-t border-forest/10 bg-[#fff9ec] px-4 py-4 lg:hidden" aria-label="行動版導覽">
+      <div class="container-shell grid grid-cols-2 gap-2 text-sm font-semibold">
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#overview">行前速覽</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#route">散步路線</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#highlights">必看景點</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="/food">附近美食</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#transport">交通停車</a>
+        <a class="rounded-xl bg-sun/45 px-4 py-3 text-forest-dark" href="/postcard">製作紀念卡</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content" class="storybook">
+    <section id="top" class="storybook-hero relative min-h-[760px] overflow-hidden pt-[4.5rem] lg:min-h-[860px]">
+      <div class="absolute inset-0">
+        <Picture
+          name="hero"
+          alt="宜蘭火車站繪本風格外觀與長頸鹿裝置"
+          class="storybook-hero-image h-full w-full object-cover object-center"
+          loading="eager"
+          fetchpriority="high"
+          sizes="100vw"
+          width={1440}
+          height={960}
+        />
+        <div class="storybook-hero-wash absolute inset-0"></div>
+      </div>
+
+      <div class="pointer-events-none absolute inset-0 z-[1]" aria-hidden="true">
+        <span class="doodle-star doodle-star-one">✦</span>
+        <span class="doodle-star doodle-star-two">✧</span>
+        <span class="doodle-star doodle-star-three">✦</span>
+        <span class="doodle-moon"></span>
+        <span class="doodle-cloud doodle-cloud-one"></span>
+        <span class="doodle-cloud doodle-cloud-two"></span>
+      </div>
+
+      <div class="container-shell relative z-10 flex min-h-[690px] items-end pb-[4.5rem] pt-24 lg:min-h-[790px] lg:items-center lg:pb-0">
+        <div class="hero-copy max-w-3xl text-white">
+          <div class="mb-5 flex flex-wrap items-center gap-2">
+            <span class="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm backdrop-blur">宜蘭市・火車站旁</span>
+            <span class="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm backdrop-blur">免費戶外景點</span>
+          </div>
+          <p class="mb-4 text-sm font-bold tracking-[0.25em] text-[#f5d982]">從車站，走進一段繪本風景</p>
+          <h1 class="max-w-3xl text-5xl leading-[1.08] font-bold tracking-tight sm:text-6xl lg:text-8xl">
+            宜蘭幾米公園
+          </h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-white/80 sm:text-xl">
+            一條不用趕路的站前散步：從宜蘭火車站、丟丟噹森林，到幾米主題廣場與幸福轉運站，用 30 到 60 分鐘收進宜蘭最有故事感的城市風景。
+          </p>
+          <div class="mt-9 flex flex-col flex-wrap gap-3 sm:flex-row">
+            <a
+              href="/postcard"
+              class="inline-flex items-center justify-center gap-2 rounded-full bg-sun px-7 py-4 font-bold text-forest-dark transition hover:-translate-y-0.5 hover:bg-[#f7cc62]"
+            >
+              <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+                <circle cx="9" cy="10" r="1.8" fill="currentColor" />
+                <path d="m5.5 16 4-3.5 2.8 2.4 2.5-2 3.7 3.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              製作我的旅行紀念卡
+            </a>
+            <a href="#route" class="inline-flex items-center justify-center px-4 py-3 font-bold text-white/85 underline decoration-white/35 underline-offset-8 transition hover:text-white">
+              查看散步路線
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="paper-wave absolute inset-x-0 bottom-0 h-8" aria-hidden="true"></div>
+    </section>
+
+    <section id="overview" class="storybook-overview relative -mt-1 bg-paper py-10 lg:py-14">
+      <div class="container-shell">
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {quickFacts.map((fact) => (
+            <article class="storybook-fact card-soft rounded-3xl p-6">
+              <p class="text-xs font-bold tracking-[0.18em] text-forest/65">{fact.label}</p>
+              <p class="mt-2 text-2xl font-bold text-forest-dark">{fact.value}</p>
+              <p class="mt-2 text-sm leading-6 text-ink/60">{fact.note}</p>
+            </article>
+          ))}
+        </div>
+        <p class="mt-5 text-center text-xs leading-5 text-ink/60">
+          戶外空間與周邊設施可能因天候、活動或維護調整，出發前請以現場公告為準。
+        </p>
+      </div>
+    </section>
+
+    <section class="storybook-section border-y border-forest/10 bg-[#fffdf7] px-4 py-14 sm:py-18">
+      <div class="container-shell">
+        <div class="text-center">
+          <p class="section-kicker">散步實用工具</p>
+          <h2 class="mt-4 text-3xl font-bold tracking-tight text-forest-dark sm:text-4xl">路線、拍照與集章，都從這裡開始</h2>
+          <p class="mx-auto mt-3 max-w-2xl leading-7 text-ink/60">需要時再開啟，不讓工具入口打斷後面的景點內容。</p>
+        </div>
+
+        <div class="mt-9 grid gap-4 lg:grid-cols-3">
+          <a href="/photo-guide" class="group flex min-h-64 flex-col rounded-[1.7rem] border-2 border-coral/15 bg-coral/7 p-6 transition hover:-translate-y-1 hover:border-coral/35 hover:bg-coral/10 sm:p-7">
+            <div class="flex items-start justify-between gap-4">
+              <span class="grid size-12 place-items-center rounded-2xl bg-coral text-white shadow-sm">
+                <svg viewBox="0 0 32 32" class="size-7" aria-hidden="true">
+                  <path d="M8 10h4l2-3h5l2 3h3.5A2.5 2.5 0 0 1 27 12.5v11A2.5 2.5 0 0 1 24.5 26h-17A2.5 2.5 0 0 1 5 23.5v-11A2.5 2.5 0 0 1 7.5 10Z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" />
+                  <circle cx="16" cy="18" r="5" fill="none" stroke="currentColor" stroke-width="2.2" />
+                </svg>
+              </span>
+              <span class="text-xs font-bold tracking-[0.14em] text-coral">PHOTO</span>
+            </div>
+            <p class="mt-6 text-xs font-bold tracking-[0.14em] text-coral">手機取景攻略</p>
+            <h3 class="mt-2 text-xl font-bold leading-7 text-forest-dark">查看 5 個手機拍照機位</h3>
+            <p class="mt-3 text-sm leading-6 text-ink/60">包含站位、構圖、光線與雨天拍攝建議。</p>
+            <span class="mt-auto flex items-center justify-between pt-6 text-sm font-bold text-coral">
+              開啟拍照指南
+              <span class="grid size-9 place-items-center rounded-full bg-white transition group-hover:translate-x-1" aria-hidden="true">→</span>
+            </span>
+          </a>
+
+          <a href="/route" class="group flex min-h-64 flex-col rounded-[1.7rem] border-2 border-forest/15 bg-forest/6 p-6 transition hover:-translate-y-1 hover:border-forest/35 hover:bg-forest/9 sm:p-7">
+            <div class="flex items-start justify-between gap-4">
+              <span class="grid size-12 place-items-center rounded-2xl bg-forest text-[#f7d876] shadow-sm">
+                <svg viewBox="0 0 32 32" class="size-7" aria-hidden="true">
+                  <path d="M6 24c4-8 7-11 11-11 3 0 4 3 7 3 2 0 3-2 3-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 4" />
+                  <circle cx="6" cy="24" r="3" fill="currentColor" />
+                  <path d="M24 5c-3.2 0-5.5 2.4-5.5 5.3 0 4 5.5 8.4 5.5 8.4s5.5-4.4 5.5-8.4C29.5 7.4 27.2 5 24 5Z" fill="#e87d62" />
+                </svg>
+              </span>
+              <span class="text-xs font-bold tracking-[0.14em] text-forest">ROUTE</span>
+            </div>
+            <p class="mt-6 text-xs font-bold tracking-[0.14em] text-forest">完整散步導航</p>
+            <h3 class="mt-2 text-xl font-bold leading-7 text-forest-dark">查看逐段路線圖與沿途辨認提示</h3>
+            <p class="mt-3 text-sm leading-6 text-ink/60">依照現場可見地標前進，第一次到訪也不容易走錯。</p>
+            <span class="mt-auto flex items-center justify-between pt-6 text-sm font-bold text-forest">
+              開啟散步路線
+              <span class="grid size-9 place-items-center rounded-full bg-white transition group-hover:translate-x-1" aria-hidden="true">→</span>
+            </span>
+          </a>
+
+          <a href="/route#stamp-card" class="group flex min-h-64 flex-col rounded-[1.7rem] border-2 border-sun/35 bg-sun/12 p-6 transition hover:-translate-y-1 hover:border-sun/65 hover:bg-sun/16 sm:p-7">
+            <div class="flex items-start justify-between gap-4">
+              <span class="grid size-12 place-items-center rounded-2xl bg-sun font-bold text-forest-dark shadow-sm">章</span>
+              <span class="rounded-full bg-forest px-3 py-1.5 text-sm font-bold text-white"><span data-stamp-count>0</span>/<span data-stamp-total>5</span></span>
+            </div>
+            <p class="mt-6 text-xs font-bold tracking-[0.14em] text-[#9a6c13]">MY WALK</p>
+            <h3 class="mt-2 text-xl font-bold leading-7 text-forest-dark">開始我的散步集章</h3>
+            <p class="mt-3 text-sm leading-6 text-ink/60">手動記錄五個景點，不需要定位。</p>
+            <span class="mt-auto flex items-center justify-between pt-6 text-sm font-bold text-forest">
+              開啟集章卡
+              <span class="grid size-9 place-items-center rounded-full bg-white transition group-hover:translate-x-1" aria-hidden="true">→</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="storybook-section storybook-section-cream section-pad overflow-hidden bg-[#fffdf7]">
+      <div class="container-shell grid items-center gap-12 lg:grid-cols-[.9fr_1.1fr] lg:gap-20">
+        <div>
+          <p class="section-kicker">先知道這件事</p>
+          <h2 class="mt-5 text-4xl leading-tight font-bold tracking-tight text-forest-dark sm:text-5xl">
+            它不是大型主題樂園，<br />而是一段城市散步。
+          </h2>
+          <p class="mt-7 text-lg leading-8 text-ink/70">
+            幾米公園的核心範圍不大，主要體驗是欣賞公共藝術、拍照與感受舊鐵路空間。最好的玩法不是只在一座雕像前停留，而是把車站、森林棚架、舊宿舍與街道一起走進故事裡。
+          </p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2">
+            <div class="rounded-3xl bg-[#edf2e8] p-6">
+              <p class="font-bold text-forest-dark">特別適合</p>
+              <p class="mt-2 text-sm leading-6 text-ink/65">搭火車抵達、親子散步、情侶拍照、喜歡公共藝術與短程行程。</p>
+            </div>
+            <div class="rounded-3xl bg-[#f3e7dc] p-6">
+              <p class="font-bold text-[#7b493b]">可能不適合</p>
+              <p class="mt-2 text-sm leading-6 text-ink/65">期待大型遊樂設施、室內展覽，或希望單一景點玩上一整天。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="absolute -left-8 -top-8 size-36 rounded-full bg-sun/35 blur-3xl"></div>
+          <Picture
+            name="plaza-walkway"
+            alt="宜蘭幾米主題廣場步道與裝置藝術"
+            class="photo-frame relative aspect-[4/3] w-full rounded-[2.25rem] object-cover"
+          />
+          <div class="absolute -bottom-6 left-5 max-w-xs rotate-[-2deg] rounded-2xl bg-[#fff9e8] px-5 py-4 text-sm leading-6 shadow-xl sm:left-10">
+            <span class="font-bold text-forest">旅行小提醒：</span> 裝置是藝術作品，請勿攀爬、踩踏或當作座椅。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="route" class="storybook-section storybook-section-sky section-pad paper-grid border-y border-forest/10 bg-paper">
+      <div class="container-shell">
+        <div class="mx-auto max-w-3xl text-center">
+          <p class="section-kicker justify-center">選一條剛好的路線</p>
+          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">從 30 分鐘到半日，都不用趕</h2>
+          <p class="mt-5 text-lg leading-8 text-ink/65">依照停留時間切換路線，每一站都能步行銜接。</p>
+        </div>
+
+        <div class="mx-auto mt-10 flex max-w-xl rounded-full border border-forest/15 bg-white/70 p-1.5" role="tablist" aria-label="散步路線時間">
+          {routes.map((route, index) => (
+            <button
+              type="button"
+              class="route-button flex-1 rounded-full border border-transparent px-3 py-3 text-sm font-bold text-forest transition"
+              role="tab"
+              aria-selected={index === 1 ? 'true' : 'false'}
+              tabindex={index === 1 ? 0 : -1}
+              aria-controls={`route-panel-${route.id}`}
+              id={`route-tab-${route.id}`}
+              data-route={route.id}
+            >
+              {route.label}
+            </button>
+          ))}
+        </div>
+
+        <div class="mx-auto mt-10 max-w-5xl">
+          {routes.map((route, index) => (
+            <article
+              id={`route-panel-${route.id}`}
+              role="tabpanel"
+              aria-labelledby={`route-tab-${route.id}`}
+              hidden={index !== 1}
+              data-route-panel={route.id}
+              class="card-soft rounded-[2rem] p-6 sm:p-9 lg:p-12"
+            >
+              <div class="grid gap-9 lg:grid-cols-[.7fr_1.3fr] lg:items-center">
+                <div>
+                  <span class="inline-flex rounded-full bg-sun/25 px-3 py-1.5 text-xs font-bold tracking-[0.12em] text-forest-dark">{route.label}</span>
+                  <h3 class="mt-4 text-3xl font-bold text-forest-dark">{route.title}</h3>
+                  <p class="mt-4 leading-7 text-ink/65">{route.summary}</p>
+                </div>
+                <ol class="relative grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                  {route.stops.map((stop, stopIndex) => (
+                    <li class="relative rounded-2xl border border-forest/10 bg-white/85 p-4 text-center">
+                      <span class="mx-auto grid size-8 place-items-center rounded-full bg-forest text-sm font-bold text-white">{stopIndex + 1}</span>
+                      <p class="mt-3 text-sm font-bold text-forest-dark">{stop}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </article>
+          ))}
+        </div>
+
+      </div>
+    </section>
+
+    <section id="highlights" class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]">
+      <div class="container-shell">
+        <div class="max-w-3xl">
+          <p class="section-kicker">沿途五個重點</p>
+          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">不是打卡清單，是一段有順序的風景</h2>
+          <p class="mt-5 text-lg leading-8 text-ink/65">先看大場景，再留意行李箱、屋舍、棚架與車站細節。</p>
+        </div>
+
+        <div class="mt-14 space-y-16 lg:space-y-24">
+          {highlights.map((item, index) => (
+            <article class:list={['grid items-center gap-8 lg:grid-cols-2 lg:gap-16', index % 2 === 1 && 'lg:[&>div:first-child]:order-2']}>
+              <div class="storybook-photo overflow-hidden rounded-[2rem] bg-paper-deep">
+                <Picture
+                  name={item.image}
+                  alt={item.alt}
+                  class="aspect-[4/3] w-full object-cover transition duration-700 hover:scale-[1.025]"
+                />
+              </div>
+              <div>
+                <p class="text-xs font-bold tracking-[0.18em] text-coral">{item.eyebrow}</p>
+                <h3 class="mt-3 text-3xl font-bold tracking-tight text-forest-dark sm:text-4xl">{item.title}</h3>
+                <p class="mt-5 text-lg leading-8 text-ink/70">{item.description}</p>
+                <div class="mt-6 flex gap-3 rounded-2xl bg-paper p-5 text-sm leading-6 text-ink/65">
+                  <svg viewBox="0 0 24 24" class="mt-0.5 size-5 shrink-0 text-sun" aria-hidden="true">
+                    <path d="M12 3a7 7 0 0 0-4 12.7V20h8v-4.3A7 7 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="2" />
+                    <path d="M9.5 20h5M10 23h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                  </svg>
+                  <p><strong class="text-forest-dark">拍照提示：</strong>{item.tip}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="storybook-night relative overflow-hidden bg-forest py-16 text-white lg:py-20">
+      <div class="absolute inset-0 opacity-15 paper-grid"></div>
+      <div class="container-shell relative grid gap-8 lg:grid-cols-[1.1fr_.9fr] lg:items-center">
+        <div>
+          <p class="text-sm font-bold tracking-[0.2em] text-[#f5d982]">最推薦的到訪時段</p>
+          <h2 class="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">平日上午，或日落前一小時</h2>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-white/70">避開正午強光與假日人潮，照片更乾淨，步行也更舒服。宜蘭天氣變化快，隨身帶一把輕便雨傘會很實用。</p>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur">
+            <p class="font-bold">晴天</p><p class="mt-1 text-sm text-white/65">上午拍裝置，傍晚拍站前氛圍。</p>
+          </div>
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur">
+            <p class="font-bold">小雨</p><p class="mt-1 text-sm text-white/65">透明傘很好拍，但要留意濕滑路面。</p>
+          </div>
+          <div class="rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur">
+            <p class="font-bold">大雨</p><p class="mt-1 text-sm text-white/65">縮短戶外停留，改走舊城室內景點。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="transport" class="storybook-section storybook-section-peach section-pad bg-paper">
+      <div class="container-shell">
+        <div class="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
+          <div>
+            <p class="section-kicker">怎麼抵達</p>
+            <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">搭火車最輕鬆，開車則要預留找車位時間</h2>
+            <p class="mt-6 text-lg leading-8 text-ink/65">核心景點就在宜蘭火車站旁，沒有必要為了這一站特別租車。若安排宜蘭郊區行程，再選擇自駕會比較合理。</p>
+          </div>
+
+          <div class="grid gap-4">
+            <article class="card-soft rounded-3xl p-6 sm:p-8">
+              <div class="flex items-start gap-4">
+                <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-forest text-white">
+                  <svg viewBox="0 0 24 24" class="size-6" aria-hidden="true"><path d="M6 3h12a2 2 0 0 1 2 2v10a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 8h10M8 21l2-3m6 3-2-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <div>
+                  <h3 class="text-xl font-bold text-forest-dark">台鐵｜最推薦</h3>
+                  <p class="mt-2 leading-7 text-ink/65">搭乘火車至宜蘭站，由前站出站，往車站南側步行約 3 分鐘即可抵達主要裝置區。</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card-soft rounded-3xl p-6 sm:p-8">
+              <div class="flex items-start gap-4">
+                <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#dfe9df] text-forest">
+                  <svg viewBox="0 0 24 24" class="size-6" aria-hidden="true"><path d="M6 4h12a2 2 0 0 1 2 2v10H4V6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 8h10M7 16v3m10-3v3M6 19h2m8 0h2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <div>
+                  <h3 class="text-xl font-bold text-forest-dark">客運｜步行銜接</h3>
+                  <p class="mt-2 leading-7 text-ink/65">於宜蘭轉運站下車後，可沿站前街區步行前往。實際班次與停靠位置請以客運業者公告為準。</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card-soft rounded-3xl p-6 sm:p-8">
+              <div class="flex items-start gap-4">
+                <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#f2e4d5] text-[#8a5746]">
+                  <svg viewBox="0 0 24 24" class="size-6" aria-hidden="true"><path d="M5 10l2-5h10l2 5v8H5v-8Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 12h14M8 18v2m8-2v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="14" r="1" fill="currentColor"/><circle cx="16" cy="14" r="1" fill="currentColor"/></svg>
+                </span>
+                <div>
+                  <h3 class="text-xl font-bold text-forest-dark">自駕｜假日提早</h3>
+                  <p class="mt-2 leading-7 text-ink/65">可找宜蘭車站、轉運站或周邊收費停車場。假日熱門時段較容易滿位，價格與開放狀況請以現場標示為準。</p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="storybook-map-card mt-14 grid overflow-hidden rounded-[2rem] border border-forest/10 bg-[#fffdf7] lg:grid-cols-[1.05fr_.95fr]">
+          <div class="p-7 sm:p-10 lg:p-12">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">位置資訊</p>
+            <h3 class="mt-3 text-3xl font-bold text-forest-dark">宜蘭火車站南側，舊鐵路宿舍一帶</h3>
+            <dl class="mt-7 grid gap-5 text-sm sm:grid-cols-2">
+              <div><dt class="text-ink/60">常用地址</dt><dd class="mt-1 font-bold text-ink">{site.address}</dd></div>
+              <div><dt class="text-ink/60">座標</dt><dd class="mt-1 font-bold text-ink">{site.latitude}, {site.longitude}</dd></div>
+              <div><dt class="text-ink/60">建議停留</dt><dd class="mt-1 font-bold text-ink">30–60 分鐘</dd></div>
+              <div><dt class="text-ink/60">推薦玩法</dt><dd class="mt-1 font-bold text-ink">從車站步行慢遊</dd></div>
+            </dl>
+            <a href={site.mapUrl} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center gap-2 rounded-full border border-forest/20 px-5 py-3 text-sm font-bold text-forest transition hover:border-forest/40 hover:bg-forest/5">
+              直接開啟地圖導航
+              <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true"><path d="M8 5h11v11M19 5 8 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+          <div class="storybook-map relative min-h-[380px] overflow-hidden bg-sky p-3">
+            <iframe
+              src={site.mapEmbedUrl}
+              title="宜蘭幾米公園 Google 地圖"
+              width="600"
+              height="450"
+              class="h-full min-h-[356px] w-full rounded-[1.5rem] border-0"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]">
+      <div class="container-shell grid gap-12 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p class="section-kicker">景點故事</p>
+          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">舊鐵路宿舍，變成一座沒有圍牆的繪本廣場</h2>
+        </div>
+        <div class="space-y-5 text-lg leading-8 text-ink/70">
+          <p>這片空間原是宜蘭火車站旁的鐵路宿舍區。再生規劃保留部分舊建築、牆面與老樹，再把《星空》、《地下鐵》、《向左走・向右走》等作品意象轉化為公共藝術。</p>
+          <p>因此，真正值得看的不只有人物雕像。鐵道、行李、等待、錯身與相遇，都和「抵達一座城市」這件事自然地連在一起。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="storybook-section storybook-section-sky section-pad border-t border-forest/10 bg-paper">
+      <div class="container-shell grid gap-12 lg:grid-cols-[.65fr_1.35fr] lg:gap-20">
+        <div>
+          <p class="section-kicker">常見問題</p>
+          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">出發前，快速確認</h2>
+        </div>
+        <div class="divide-y divide-forest/10 border-y border-forest/10">
+          {faqs.map((item) => (
+            <details class="faq group py-1">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-5 py-5 font-bold text-forest-dark sm:text-lg">
+                <span>{item.q}</span>
+                <span class="faq-plus grid size-8 shrink-0 place-items-center rounded-full bg-white text-xl font-normal transition">+</span>
+              </summary>
+              <p class="max-w-3xl pb-6 pr-12 leading-7 text-ink/65">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="storybook-cta-wrap bg-sun px-4 py-16 sm:py-20">
+      <div class="storybook-cta container-shell rounded-[2rem] bg-forest-dark px-6 py-12 text-center text-white sm:px-12 lg:py-16">
+        <p class="text-sm font-bold tracking-[0.2em] text-[#f7d876]">準備好散步了嗎？</p>
+        <h2 class="mx-auto mt-4 max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">抵達宜蘭站後，不必搭車，故事就在出口旁邊。</h2>
+        <p class="mx-auto mt-5 max-w-2xl leading-7 text-white/70">穿好走的鞋、帶一把傘，留一小時給車站周邊。不要趕著完成清單，慢慢看會更好。</p>
+        <a href={site.mapUrl} target="_blank" rel="noopener noreferrer" class="mt-8 inline-flex items-center justify-center rounded-full border border-white/25 bg-white/5 px-6 py-3 text-sm font-bold text-white/85 transition hover:border-white/45 hover:bg-white/10 hover:text-white">在 Google 地圖查看位置</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="storybook-footer bg-[#1b302a] pb-10 pt-14 text-white/70">
+    <div class="container-shell">
+      <div class="grid gap-10 border-b border-white/10 pb-10 lg:grid-cols-[1.1fr_.9fr]">
+        <div>
+          <p class="text-xl font-bold text-white">JimmyPark.org</p>
+          <p class="mt-3 max-w-xl text-sm leading-6">宜蘭幾米公園獨立旅遊指南。內容以行前決策、步行路線與現場禮儀為核心，不提供訂票、登入或商業預約服務。</p>
+        </div>
+        <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/route">散步路線</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/photo-guide">拍照指南</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/food">附近美食</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#transport">交通停車</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#faq">常見問題</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/postcard">製作紀念卡</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/privacy">隱私與聲明</a>
+        </div>
+      </div>
+
+      <details class="mt-8 rounded-2xl border border-white/10 bg-white/5 p-5 text-sm leading-6">
+        <summary class="cursor-pointer font-bold text-white">隱私與授權摘要</summary>
+        <div class="mt-4 space-y-4 text-white/60">
+          <p>本站為獨立旅遊資訊網站，並非幾米品牌、宜蘭縣政府、臺灣鐵路公司或任何景點營運單位的官方網站。景點狀態可能變動，請以現場公告為準。</p>
+          <p>本站使用 Google Analytics 4 了解匿名化的網站使用情形，不提供會員登入，也不建立使用者資料庫。</p>
+          <div>
+            <p class="font-bold text-white/80">真實照片授權：</p>
+            <ul class="mt-2 space-y-1">
+              {photoCredits.map((credit) => (
+                <li>
+                  <a class="underline decoration-white/25 underline-offset-4 hover:text-white" href={credit.url} target="_blank" rel="noopener noreferrer">
+                    {credit.work}｜{credit.author}｜{credit.license}
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <p class="mt-2">照片已進行尺寸調整、裁切與 WebP 轉檔；社群分享圖另加入文字排版。外部連結僅保留地圖導航與必要授權來源。</p>
+          </div>
+          <p><a class="font-bold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white" href="/privacy">閱讀完整隱私與聲明</a></p>
+        </div>
+      </details>
+
+      <div class="mt-8 flex flex-col justify-between gap-3 text-xs text-white/45 sm:flex-row">
+        <p>© JimmyPark.org</p>
+        <p>獨立旅遊指南・非官方網站</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    import '../scripts/stamps';
+
+    const menuButton = document.querySelector<HTMLButtonElement>('#menu-button');
+    const mobileNav = document.querySelector<HTMLElement>('#mobile-nav');
+
+    menuButton?.addEventListener('click', () => {
+      const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!isOpen));
+      menuButton.setAttribute('aria-label', isOpen ? '開啟導覽選單' : '關閉導覽選單');
+      if (mobileNav) mobileNav.hidden = isOpen;
+    });
+
+    mobileNav?.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileNav.hidden = true;
+        menuButton?.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const routeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-route]'));
+    const routePanels = Array.from(document.querySelectorAll<HTMLElement>('[data-route-panel]'));
+
+    const selectRoute = (button: HTMLButtonElement) => {
+      const routeId = button.dataset.route;
+      routeButtons.forEach((item) => {
+        const isActive = item === button;
+        item.setAttribute('aria-selected', String(isActive));
+        item.tabIndex = isActive ? 0 : -1;
+      });
+      routePanels.forEach((panel) => {
+        panel.hidden = panel.dataset.routePanel !== routeId;
+      });
+    };
+
+    routeButtons.forEach((button, index) => {
+      button.addEventListener('click', () => selectRoute(button));
+      button.addEventListener('keydown', (event) => {
+        if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + routeButtons.length) % routeButtons.length;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % routeButtons.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = routeButtons.length - 1;
+        const nextButton = routeButtons[nextIndex];
+        if (nextButton) {
+          selectRoute(nextButton);
+          nextButton.focus();
+        }
+      });
+    });
+  </script>
+</BaseLayout>

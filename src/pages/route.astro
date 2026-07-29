@@ -1,0 +1,417 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Picture from '../components/Picture.astro';
+import StampCard from '../components/StampCard.astro';
+import { routeGuides } from '../data/routeGuides';
+import { site } from '../data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '宜蘭站前散步路線',
+  description: '從宜蘭火車站出發的 30 分鐘、60 分鐘與半日步行路線。',
+  itemListElement: routeGuides.map((route, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: route.title,
+    url: `${site.url}/route#${route.id}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="宜蘭站前散步路線｜30 分鐘、60 分鐘與半日攻略"
+  description="從宜蘭火車站出發，依照逐段導航卡走完丟丟噹森林、星空列車、幾米主題廣場、幸福轉運站與宜蘭舊城。"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="/" class="group flex items-center gap-3" aria-label="返回 JimmyPark.org 首頁">
+        <span class="storybook-logo grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f4c95e" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/65">站前散步路線</span>
+        </span>
+      </a>
+      <div class="flex items-center gap-2">
+        <a href="/postcard" class="hidden rounded-full bg-sun/35 px-4 py-2 text-sm font-bold text-forest-dark transition hover:bg-sun/55 sm:inline-flex">製作紀念卡</a>
+        <a href="/" class="rounded-full border border-forest/15 bg-white/60 px-4 py-2 text-sm font-bold text-forest transition hover:bg-white">返回指南</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="storybook overflow-hidden pt-[4.5rem]">
+    <section class="route-hero storybook-section relative overflow-hidden bg-[#e4efeb] px-4 py-14 sm:py-20 lg:py-24">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="doodle-star doodle-star-one !text-sun">✦</span>
+        <span class="doodle-star doodle-star-two !text-coral">✧</span>
+      </div>
+      <div class="container-shell relative grid items-center gap-10 lg:grid-cols-[.88fr_1.12fr] lg:gap-16">
+        <div>
+          <p class="section-kicker">START FROM YILAN STATION</p>
+          <h1 class="mt-5 max-w-3xl text-5xl leading-[1.1] font-bold text-forest-dark sm:text-7xl">從車站出口開始，照著節點慢慢走</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-ink/68">
+            不必猜下一站在哪裡。選擇 30 分鐘、60 分鐘或半日行程，依照步行時間、沿途識別物與安全提醒完成散步。
+          </p>
+          <div class="mt-7 flex flex-wrap gap-2 text-sm font-bold text-forest">
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">全程步行</span>
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">車站出發</span>
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">手機友善</span>
+          </div>
+        </div>
+
+        <div class="relative">
+          <Picture
+            name="plaza-walkway"
+            alt="宜蘭幾米主題廣場步道與公共藝術"
+            class="route-hero-photo aspect-[4/3] w-full rounded-[2.3rem] object-cover"
+            loading="eager"
+            fetchpriority="high"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+          />
+          <div class="route-ticket absolute -bottom-7 left-4 right-4 rounded-[1.5rem] bg-[#fff9e9] p-5 shadow-xl sm:left-auto sm:right-7 sm:w-80">
+            <p class="text-xs font-bold tracking-[0.15em] text-coral">TODAY'S WALK</p>
+            <div class="mt-3 flex items-center justify-between gap-4">
+              <span class="font-bold text-forest-dark">宜蘭車站</span>
+              <span class="text-sun">→ → →</span>
+              <span class="font-bold text-forest-dark">城市故事</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <StampCard />
+
+    <section class="storybook-section storybook-section-cream px-4 pb-12 pt-20 sm:pb-16">
+      <div class="container-shell">
+        <nav class="grid gap-3 sm:grid-cols-3" aria-label="選擇散步路線">
+          {routeGuides.map((route, index) => (
+            <a href={`#${route.id}`} class:list={['route-picker', index === 1 && 'route-picker-featured']}>
+              <span class="route-picker-number">{index + 1}</span>
+              <span>
+                <strong>{route.label}</strong>
+                <small>{route.title}</small>
+              </span>
+              <span aria-hidden="true">↓</span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </section>
+
+    {routeGuides.map((route, routeIndex) => (
+      <section
+        id={route.id}
+        class:list={[
+          'route-guide-section storybook-section scroll-mt-20 px-4 py-16 sm:py-24',
+          routeIndex % 2 === 0 ? 'bg-[#fffdf7]' : 'storybook-section-sky bg-paper',
+        ]}
+        style={`--route-accent:${route.accent}`}
+      >
+        <div class="container-shell">
+          <div class="grid items-end gap-7 border-b border-forest/10 pb-9 lg:grid-cols-[1fr_auto]">
+            <div>
+              <p class="route-label">{route.label}</p>
+              <h2 class="mt-4 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">{route.title}</h2>
+              <p class="mt-5 max-w-3xl text-lg leading-8 text-ink/68">{route.summary}</p>
+            </div>
+            <dl class="grid gap-3 text-sm sm:grid-cols-2 lg:max-w-xl">
+              <div class="route-meta">
+                <dt>適合</dt>
+                <dd>{route.suitable}</dd>
+              </div>
+              <div class="route-meta">
+                <dt>節奏</dt>
+                <dd>{route.rhythm}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="mt-10 grid items-start gap-10 lg:grid-cols-[.72fr_1.28fr] lg:gap-14">
+            <aside class="route-map-card lg:sticky lg:top-24" aria-label={`${route.title}路線節點`}>
+              <p class="text-xs font-bold tracking-[0.16em] text-ink/45">ROUTE OVERVIEW</p>
+              <h3 class="mt-2 text-2xl font-bold text-forest-dark">沿著這些節點前進</h3>
+              <ol class="route-timeline mt-7">
+                {route.stops.map((stop, stopIndex) => (
+                  <li>
+                    <span>{stopIndex + 1}</span>
+                    <div>
+                      <strong>{stop}</strong>
+                      <small>{stopIndex === 0 ? '從這裡開始' : stopIndex === route.stops.length - 1 ? '路線終點' : '沿途停留'}</small>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <p class="mt-7 rounded-2xl bg-white/65 p-4 text-sm leading-6 text-ink/58">
+                步行時間是一般成人的概略估計，拍照、等紅綠燈與親子同行都可能增加所需時間。
+              </p>
+            </aside>
+
+            <div>
+              <div class="flex items-end justify-between gap-4">
+                <div>
+                  <p class="text-xs font-bold tracking-[0.16em] text-coral">STEP BY STEP</p>
+                  <h3 class="mt-2 text-3xl font-bold text-forest-dark">逐段走法</h3>
+                </div>
+                <span class="hidden text-sm text-ink/45 sm:inline">{route.segments.length} 段</span>
+              </div>
+
+              <ol class="mt-7 grid gap-4">
+                {route.segments.map((segment, segmentIndex) => (
+                  <li class="route-segment">
+                    <div class="route-segment-index">{String(segmentIndex + 1).padStart(2, '0')}</div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+                        <h4 class="text-lg font-bold text-forest-dark">
+                          {segment.from} <span class="mx-1 text-sun">→</span> {segment.to}
+                        </h4>
+                        <span class="route-walk-time">{segment.walk}</span>
+                      </div>
+                      <p class="mt-3 leading-7 text-ink/68">{segment.instruction}</p>
+                      <p class="mt-3 flex items-start gap-2 text-sm leading-6 text-forest">
+                        <svg viewBox="0 0 24 24" class="mt-0.5 size-4 shrink-0" aria-hidden="true">
+                          <path d="M12 21s6-4.8 6-11a6 6 0 1 0-12 0c0 6.2 6 11 6 11Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                          <circle cx="12" cy="10" r="2" fill="currentColor" />
+                        </svg>
+                        <span><strong>辨認：</strong>{segment.landmark}</span>
+                      </p>
+                      {segment.photoSpot && (
+                        <div class="mt-3 flex flex-wrap items-center gap-3">
+                          <button
+                            type="button"
+                            class="stamp-inline-button"
+                            data-stamp-toggle={segment.photoSpot}
+                            aria-pressed="false"
+                          >
+                            <span aria-hidden="true">章</span>
+                            <span data-stamp-action-label>蓋下這一站</span>
+                          </button>
+                          <a href={`/photo-guide#${segment.photoSpot}`} class="inline-flex items-center gap-1.5 text-sm font-bold text-coral underline decoration-coral/25 underline-offset-4">
+                            查看這一站的拍照機位
+                            <span aria-hidden="true">→</span>
+                          </a>
+                        </div>
+                      )}
+                      {segment.note && (
+                        <p class="mt-3 rounded-xl border-l-4 border-sun bg-sun/10 px-4 py-3 text-sm leading-6 text-ink/62">
+                          {segment.note}
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <section class="storybook-section bg-sun px-4 py-16 sm:py-20">
+      <div class="container-shell grid items-center gap-8 rounded-[2rem] bg-forest-dark px-6 py-10 text-white sm:px-10 lg:grid-cols-[1fr_auto] lg:px-14 lg:py-14">
+        <div>
+          <p class="text-xs font-bold tracking-[0.18em] text-[#f7d876]">WALK, THEN REMEMBER</p>
+          <h2 class="mt-3 text-3xl font-bold sm:text-4xl">走完路線，把今天做成一張紀念卡</h2>
+          <p class="mt-4 max-w-2xl leading-7 text-white/68">選擇走過的主題、加入一張照片，所有處理都只在你的瀏覽器中完成。</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <a href="/postcard" class="inline-flex justify-center rounded-full bg-sun px-6 py-3.5 font-bold text-forest-dark transition hover:-translate-y-0.5">製作旅行紀念卡</a>
+          <a href={site.mapUrl} target="_blank" rel="noopener noreferrer" class="inline-flex justify-center rounded-full border border-white/20 px-6 py-3 text-sm font-bold text-white/80 transition hover:bg-white/5 hover:text-white">在 Google 地圖查看起點</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="storybook-footer bg-[#1b302a] px-4 py-10 text-white/65">
+    <div class="container-shell flex flex-col justify-between gap-3 text-sm sm:flex-row">
+      <p>© JimmyPark.org</p>
+      <div class="flex flex-wrap gap-x-5 gap-y-2">
+        <a href="/" class="hover:text-white">景點指南</a>
+        <a href="/photo-guide" class="hover:text-white">拍照指南</a>
+        <a href="/postcard" class="hover:text-white">製作紀念卡</a>
+        <a href="/privacy" class="hover:text-white">隱私與聲明</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    import '../scripts/stamps';
+  </script>
+</BaseLayout>
+
+<style>
+  .route-hero-photo {
+    border: 3px solid rgb(255 255 255 / .72);
+    box-shadow: 10px 12px 0 rgb(60 113 99 / .12);
+    transform: rotate(1deg);
+  }
+  .route-ticket {
+    border: 2px dashed rgb(60 113 99 / .22);
+    transform: rotate(-1.5deg);
+  }
+  .route-picker {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: .9rem;
+    border: 2px solid rgb(60 113 99 / .12);
+    border-radius: 1.4rem;
+    background: rgb(255 255 255 / .7);
+    padding: 1rem 1.1rem;
+    color: var(--color-forest);
+    transition: .2s ease;
+  }
+  .route-picker:hover {
+    border-color: rgb(60 113 99 / .42);
+    background: white;
+    transform: translateY(-2px);
+  }
+  .route-picker-featured {
+    border-color: rgb(60 113 99 / .35);
+    box-shadow: 4px 5px 0 rgb(60 113 99 / .09);
+  }
+  .route-picker-number {
+    display: grid;
+    width: 2.2rem;
+    height: 2.2rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-forest);
+    color: white;
+    font-weight: 700;
+  }
+  .route-picker strong, .route-picker small { display: block; }
+  .route-picker small { margin-top: .2rem; color: rgb(42 52 48 / .48); font-size: .72rem; }
+  .route-label {
+    display: inline-flex;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--route-accent) 16%, transparent);
+    padding: .5rem .8rem;
+    color: var(--route-accent);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+  }
+  .route-meta {
+    border-radius: 1.1rem;
+    background: rgb(255 255 255 / .72);
+    padding: 1rem;
+  }
+  .route-meta dt { color: rgb(42 52 48 / .45); font-size: .7rem; font-weight: 700; }
+  .route-meta dd { margin-top: .35rem; color: var(--color-forest-dark); font-weight: 700; line-height: 1.5; }
+  .route-map-card {
+    border: 2px solid rgb(60 113 99 / .13);
+    border-radius: 1.8rem;
+    background: color-mix(in srgb, var(--route-accent) 8%, #fffdf7);
+    padding: 1.5rem;
+    box-shadow: 6px 7px 0 rgb(60 113 99 / .07);
+  }
+  .route-timeline { position: relative; }
+  .route-timeline::before {
+    position: absolute;
+    top: 1.1rem;
+    bottom: 1.1rem;
+    left: 1.05rem;
+    width: 3px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--route-accent) 42%, transparent);
+    content: "";
+  }
+  .route-timeline li {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4.25rem;
+  }
+  .route-timeline li > span {
+    z-index: 1;
+    display: grid;
+    width: 2.2rem;
+    height: 2.2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 3px solid color-mix(in srgb, var(--route-accent) 25%, white);
+    border-radius: 50%;
+    background: var(--route-accent);
+    color: white;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .route-timeline strong, .route-timeline small { display: block; }
+  .route-timeline strong { color: var(--color-forest-dark); }
+  .route-timeline small { margin-top: .15rem; color: rgb(42 52 48 / .45); font-size: .7rem; }
+  .route-segment {
+    display: flex;
+    gap: 1rem;
+    border: 2px solid rgb(60 113 99 / .11);
+    border-radius: 1.5rem;
+    background: rgb(255 255 255 / .76);
+    padding: 1.2rem;
+    transition: .2s ease;
+  }
+  .route-segment:hover {
+    border-color: color-mix(in srgb, var(--route-accent) 45%, transparent);
+    box-shadow: 4px 5px 0 rgb(60 113 99 / .06);
+  }
+  .route-segment-index {
+    display: grid;
+    width: 2.6rem;
+    height: 2.6rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: .85rem;
+    background: var(--route-accent);
+    color: white;
+    font-size: .78rem;
+    font-weight: 700;
+  }
+  .route-walk-time {
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--route-accent) 12%, transparent);
+    padding: .3rem .6rem;
+    color: var(--route-accent);
+    font-size: .7rem;
+    font-weight: 700;
+  }
+  .stamp-inline-button {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    border: 2px solid rgb(60 113 99 / .15);
+    border-radius: 999px;
+    background: rgb(255 255 255 / .8);
+    padding: .45rem .75rem;
+    color: var(--color-forest);
+    font-size: .75rem;
+    font-weight: 700;
+    transition: .2s ease;
+  }
+  .stamp-inline-button > span:first-child {
+    display: grid;
+    width: 1.5rem;
+    height: 1.5rem;
+    place-items: center;
+    border: 1px dashed currentColor;
+    border-radius: 50%;
+    font-size: .62rem;
+  }
+  .stamp-inline-button:hover { border-color: var(--color-forest); background: white; }
+  .stamp-inline-button[aria-pressed="true"] {
+    border-color: rgb(216 120 96 / .4);
+    background: rgb(216 120 96 / .1);
+    color: var(--color-coral);
+  }
+  @media (max-width: 639px) {
+    .route-segment { gap: .75rem; padding: 1rem; }
+    .route-segment-index { width: 2.25rem; height: 2.25rem; }
+    .route-map-card { border-radius: 1.45rem; padding: 1.2rem; }
+  }
+</style>

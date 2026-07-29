@@ -1,0 +1,396 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { routes } from '../data/site';
+
+const formats = [
+  { id: 'square', name: '方形貼文', size: '1080 × 1080', width: 1080, height: 1080, note: '社群貼文' },
+  { id: 'portrait', name: '直式貼文', size: '1080 × 1350', width: 1080, height: 1350, note: 'IG・小紅書' },
+  { id: 'story', name: '限時動態', size: '1080 × 1920', width: 1080, height: 1920, note: 'Stories・桌布' },
+  { id: 'landscape', name: '橫式明信片', size: '1600 × 1200', width: 1600, height: 1200, note: '分享・收藏' },
+] as const;
+
+const templates = [
+  { id: 'ticket', name: '宜蘭旅行票', note: '暖黃・車票與郵戳', routeId: 'quick', swatch: 'linear-gradient(135deg,#fff0be,#dc8168)' },
+  { id: 'forest', name: '丟丟噹森林', note: '青綠・枝葉與鐵軌', routeId: 'classic', swatch: 'linear-gradient(135deg,#dcece1,#3c7163)' },
+  { id: 'starlight', name: '星空列車', note: '深藍・月亮與星星', routeId: 'classic', swatch: 'linear-gradient(135deg,#263d62,#f3ca61)' },
+  { id: 'notebook', name: '宜蘭舊城手帳', note: '淡紫・膠帶與筆記', routeId: 'halfday', swatch: 'linear-gradient(135deg,#eee7f5,#80709c)' },
+  { id: 'rain', name: '雨天宜蘭', note: '霧藍・雨滴與透明傘', routeId: 'classic', swatch: 'linear-gradient(135deg,#dcebf0,#638a96)' },
+  { id: 'sunset', name: '黃昏散步', note: '橙粉・夕陽與回程票', routeId: 'quick', swatch: 'linear-gradient(135deg,#ffd3a2,#c86d6d)' },
+  { id: 'collector', name: '五站完成紀念', note: '集滿 5 站後解鎖', routeId: 'classic', swatch: 'linear-gradient(135deg,#f4c95e,#d97860,#3c7163)', locked: true },
+] as const;
+---
+
+<BaseLayout
+  title="宜蘭散步紀念卡製作器｜JimmyPark.org"
+  description="在瀏覽器中拍照、自拍或選擇相片，套用原創宜蘭旅行模板並下載紀念卡；照片不會上傳或儲存。"
+>
+  <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="/" class="group flex items-center gap-3" aria-label="返回 JimmyPark.org 首頁">
+        <span class="storybook-logo grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f4c95e" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/65">旅行紀念卡</span>
+        </span>
+      </a>
+      <a href="/" class="rounded-full border border-forest/15 bg-white/60 px-4 py-2 text-sm font-bold text-forest transition hover:bg-white">
+        返回指南
+      </a>
+    </div>
+  </header>
+
+  <main id="main-content" class="storybook overflow-hidden pt-[4.5rem]">
+    <section class="storybook-section storybook-section-sky relative px-4 py-12 sm:py-16">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="doodle-star doodle-star-one !text-sun">✦</span>
+        <span class="doodle-star doodle-star-two !text-coral">✧</span>
+      </div>
+      <div class="container-shell relative">
+        <p class="section-kicker">MAKE A TRAVEL MEMORY</p>
+        <div class="mt-4 grid items-end gap-7 lg:grid-cols-[1fr_auto]">
+          <div>
+            <h1 class="max-w-4xl text-4xl leading-tight font-bold text-forest-dark sm:text-6xl">把今天的宜蘭，做成一張紀念卡</h1>
+            <p class="mt-4 max-w-3xl text-base leading-7 text-ink/68 sm:text-lg">
+              先拍照、自拍或從相簿選取，再挑選尺寸與風格。照片、文字與成品都只留在目前裝置。
+            </p>
+          </div>
+          <div class="inline-flex max-w-xl items-start gap-3 rounded-[1.4rem] border-2 border-forest/15 bg-white/75 px-5 py-4 text-sm leading-6 text-ink/70 shadow-sm">
+            <svg viewBox="0 0 24 24" class="mt-0.5 size-5 shrink-0 text-forest" aria-hidden="true">
+              <path d="M12 3 5 6v5c0 4.6 2.8 8.2 7 10 4.2-1.8 7-5.4 7-10V6l-7-3Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+              <path d="m9 12 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <p><strong class="text-forest-dark">完全本機處理。</strong>不會上傳照片、儲存人臉或傳送輸入文字。</p>
+          </div>
+        </div>
+
+        <div data-stamp-incomplete class="mt-6 flex max-w-3xl flex-col gap-3 rounded-[1.3rem] border border-forest/12 bg-white/55 px-4 py-3.5 text-sm text-ink/62 sm:flex-row sm:items-center sm:justify-between">
+          <p><strong class="text-forest-dark">散步集章 <span data-stamp-count>0</span>/<span data-stamp-total>5</span>。</strong>集滿後會解鎖「五站完成紀念」風格。</p>
+          <a href="/route#stamp-card" class="shrink-0 font-bold text-coral underline decoration-coral/25 underline-offset-4">前往集章卡</a>
+        </div>
+        <div data-stamp-complete hidden class="mt-6 flex max-w-3xl flex-col gap-3 rounded-[1.3rem] border-2 border-sun/55 bg-sun/18 px-4 py-3.5 text-sm text-ink/68 sm:flex-row sm:items-center sm:justify-between">
+          <p><strong class="text-forest-dark">五站集章完成。</strong>「五站完成紀念」風格已經解鎖，可以開始加入照片。</p>
+          <span class="shrink-0 rounded-full bg-forest px-3 py-1.5 font-bold text-white">5 / 5 COMPLETE</span>
+        </div>
+
+        <nav class="mt-8 flex gap-2 overflow-x-auto pb-2" aria-label="製作步驟">
+          <a href="#photo-step" class="postcard-step-chip"><span>1</span>拍照或上傳</a>
+          <a href="#format-step" class="postcard-step-chip"><span>2</span>選尺寸</a>
+          <a href="#style-step" class="postcard-step-chip"><span>3</span>選風格</a>
+          <a href="#edit-step" class="postcard-step-chip"><span>4</span>調整並下載</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="storybook-section storybook-section-cream section-pad">
+      <div class="container-shell grid items-start gap-5 lg:grid-cols-[0.9fr_1.1fr] lg:gap-x-12">
+          <section id="photo-step" class="card-soft postcard-control-card scroll-mt-24 p-5 sm:p-7 lg:col-start-1" aria-labelledby="photo-step-title">
+            <div class="postcard-step-heading">
+              <span class="bg-sun text-forest-dark">1</span>
+              <div>
+                <h2 id="photo-step-title">拍照、自拍或選相片</h2>
+                <p>相機會先顯示模板取景框；也支援 JPG、PNG、WebP，單張上限 20MB。</p>
+              </div>
+            </div>
+
+            <div class="mt-5 grid gap-2.5 sm:grid-cols-3">
+              <button data-open-camera="environment" type="button" class="postcard-source-button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h4l1.5-2h5L16 8h4v11H4V8Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="13" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                <span><strong>開啟相機</strong><small>後鏡頭拍景</small></span>
+              </button>
+              <button data-open-camera="user" type="button" class="postcard-source-button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="9" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 20c.8-4 3-6 6.5-6s5.7 2 6.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                <span><strong>自拍</strong><small>前鏡頭取景</small></span>
+              </button>
+              <label class="postcard-source-button cursor-pointer">
+                <input data-photo-input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" />
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17.5V20h16v-2.5M12 4v11m-4-7 4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span><strong>選擇相片</strong><small>相簿或檔案</small></span>
+              </label>
+            </div>
+
+            <label data-upload-zone class="mt-3 flex cursor-pointer items-center gap-3 rounded-[1.25rem] border-2 border-dashed border-forest/20 bg-white/55 px-4 py-3 text-sm transition hover:border-forest/45 hover:bg-white">
+              <input data-drop-photo-input class="sr-only" type="file" accept="image/jpeg,image/png,image/webp" />
+              <span class="grid size-9 shrink-0 place-items-center rounded-full bg-forest/10 text-forest">＋</span>
+              <span class="min-w-0"><strong class="block text-forest-dark">也可以把照片拖到這裡</strong><small data-file-label class="block truncate text-ink/50">尚未選擇照片</small></span>
+            </label>
+          </section>
+
+          <aside class="lg:col-start-2 lg:row-start-1 lg:row-span-4 lg:h-full lg:self-stretch" aria-label="紀念卡即時預覽">
+            <div class="lg:sticky lg:top-24">
+              <div class="postcard-preview-shell">
+                <div class="postcard-preview-label">
+                  <span>即時預覽</span>
+                  <span data-preview-format>直式貼文・1080 × 1350</span>
+                </div>
+                <div class="postcard-canvas-stage">
+                  <canvas
+                    data-postcard-canvas
+                    width="1080"
+                    height="1350"
+                    class="postcard-canvas"
+                    aria-label="旅行紀念卡預覽；加入照片後可拖曳調整位置"
+                  ></canvas>
+                </div>
+              </div>
+              <div class="mt-4 flex flex-wrap items-center justify-between gap-3 px-2 text-xs leading-5 text-ink/50">
+                <p>高畫質 JPG・輸出不包含 EXIF 定位資訊</p>
+                <a href="/privacy" class="font-bold text-forest underline decoration-forest/25 underline-offset-4">照片與隱私說明</a>
+              </div>
+            </div>
+          </aside>
+
+          <section id="format-step" class="card-soft postcard-control-card scroll-mt-24 p-5 sm:p-7 lg:col-start-1" aria-labelledby="format-step-title">
+            <div class="postcard-step-heading">
+              <span class="bg-forest text-white">2</span>
+              <div>
+                <h2 id="format-step-title">選擇輸出尺寸</h2>
+                <p>切換尺寸會自動重新排版，不會清除照片與文字。</p>
+              </div>
+            </div>
+            <div class="mt-5 grid grid-cols-2 gap-2.5" role="group" aria-label="輸出尺寸">
+              {formats.map((format, index) => (
+                <button
+                  type="button"
+                  data-postcard-format={format.id}
+                  data-width={format.width}
+                  data-height={format.height}
+                  data-name={format.name}
+                  aria-pressed={index === 1 ? 'true' : 'false'}
+                  class="postcard-choice postcard-format"
+                >
+                  <span class="format-shape" style={`aspect-ratio:${format.width}/${format.height}`}></span>
+                  <span>
+                    <strong>{format.name}</strong>
+                    <small>{format.size}</small>
+                    <small>{format.note}</small>
+                  </span>
+                  <span class="choice-check" aria-hidden="true">✓</span>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section id="style-step" class="card-soft postcard-control-card scroll-mt-24 p-5 sm:p-7 lg:col-start-1" aria-labelledby="style-step-title">
+            <div class="postcard-step-heading">
+              <span class="bg-coral text-white">3</span>
+              <div>
+                <h2 id="style-step-title">挑一種原創風格</h2>
+                <p>以宜蘭的車站、森林、雨與夜色為靈感，不使用角色圖像。</p>
+              </div>
+            </div>
+            <div class="mt-5 grid gap-2.5 sm:grid-cols-2" role="group" aria-label="紀念卡風格">
+              {templates.map((template, index) => {
+                const route = routes.find((item) => item.id === template.routeId) ?? routes[1];
+                const locked = 'locked' in template && template.locked;
+                return (
+                  <button
+                    type="button"
+                    data-postcard-template={template.id}
+                    data-stamp-unlock={locked ? '' : undefined}
+                    data-title={template.name}
+                    data-route-title={route.title}
+                    data-route-label={route.label}
+                    data-stops={route.stops.join('|')}
+                    aria-pressed={index === 1 ? 'true' : 'false'}
+                    aria-disabled={locked ? 'true' : 'false'}
+                    disabled={locked}
+                    class="postcard-choice postcard-template"
+                  >
+                    <span class="template-swatch" style={`background:${template.swatch}`}></span>
+                    <span>
+                      <strong>{template.name}</strong>
+                      <small data-stamp-unlock-note={locked ? '' : undefined}>{template.note}</small>
+                    </span>
+                    <span class="choice-check" aria-hidden="true">✓</span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+
+          <section id="edit-step" class="card-soft postcard-control-card scroll-mt-24 p-5 sm:p-7 lg:col-start-1" aria-labelledby="edit-step-title">
+            <div class="postcard-step-heading">
+              <span class="bg-[#81729f] text-white">4</span>
+              <div>
+                <h2 id="edit-step-title">調整文字與照片</h2>
+                <p>可在預覽上拖曳照片；姓名、日期與短句都可以留白。</p>
+              </div>
+            </div>
+
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
+              <label class="postcard-field">
+                <span>暱稱</span>
+                <input data-name-input type="text" maxlength="12" placeholder="旅行的人" />
+              </label>
+              <label class="postcard-field">
+                <span>到訪日期</span>
+                <input data-date-input type="date" />
+              </label>
+            </div>
+            <label class="postcard-field mt-3 block">
+              <span>旅行心情</span>
+              <input data-caption-input type="text" maxlength="30" placeholder="今天，在宜蘭慢慢走" />
+            </label>
+            <div class="mt-2 flex flex-wrap items-center gap-2">
+              <button type="button" data-phrase="今天，在宜蘭慢慢走" class="postcard-phrase">慢慢走</button>
+              <button type="button" data-phrase="等一班開往星空的列車" class="postcard-phrase">星空列車</button>
+              <button type="button" data-phrase="雨沒有打亂今天的風景" class="postcard-phrase">雨天散步</button>
+              <span class="ml-auto text-xs text-ink/45"><span data-caption-count>0</span>/30</span>
+            </div>
+
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              <label class="postcard-slider">縮放 <output data-zoom-output>100%</output><input data-zoom-input type="range" min="1" max="2.5" step="0.01" value="1" disabled /></label>
+              <label class="postcard-slider">亮度 <output data-brightness-output>100%</output><input data-brightness-input type="range" min="70" max="130" step="1" value="100" disabled /></label>
+              <label class="postcard-slider">對比 <output data-contrast-output>100%</output><input data-contrast-input type="range" min="70" max="140" step="1" value="100" disabled /></label>
+              <label class="postcard-slider">色彩 <output data-saturation-output>100%</output><input data-saturation-input type="range" min="0" max="160" step="1" value="100" disabled /></label>
+            </div>
+
+            <div class="mt-5 grid grid-cols-4 gap-2">
+              <button data-rotate-left type="button" disabled class="postcard-tool">左轉</button>
+              <button data-flip-photo type="button" disabled class="postcard-tool">翻轉</button>
+              <button data-rotate-right type="button" disabled class="postcard-tool">右轉</button>
+              <button data-reset-photo type="button" disabled class="postcard-tool">重設</button>
+            </div>
+            <div class="mt-5 grid gap-3 sm:grid-cols-2">
+              <button data-download type="button" disabled class="rounded-full bg-forest px-5 py-3.5 font-bold text-white shadow-sm transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-40">下載 JPG</button>
+              <button data-share type="button" disabled class="rounded-full border-2 border-forest/20 bg-white px-5 py-3.5 font-bold text-forest transition hover:bg-paper disabled:cursor-not-allowed disabled:opacity-40">分享紀念卡</button>
+            </div>
+            <p data-editor-status class="mt-4 min-h-6 text-sm leading-6 text-ink/60" role="status" aria-live="polite">請先拍照或加入一張相片。</p>
+          </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog data-camera-dialog class="postcard-camera-dialog">
+    <div class="postcard-camera-panel">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold tracking-[0.16em] text-coral">LIVE CAMERA</p>
+          <h2 class="mt-1 text-2xl font-bold text-forest-dark">把人放進虛線框裡</h2>
+          <p data-camera-status class="mt-1 text-sm text-ink/55" role="status">正在準備相機…</p>
+        </div>
+        <button data-close-camera type="button" class="grid size-10 shrink-0 place-items-center rounded-full bg-forest/10 text-xl text-forest" aria-label="關閉相機">×</button>
+      </div>
+
+      <div data-camera-viewport class="postcard-camera-viewport mt-5">
+        <video data-camera-video playsinline muted></video>
+        <div class="postcard-camera-guide" aria-hidden="true">
+          <span>照片安全範圍</span>
+        </div>
+        <div data-camera-countdown class="postcard-camera-countdown" hidden></div>
+      </div>
+
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
+        <button data-switch-camera type="button" class="postcard-camera-secondary">切換鏡頭</button>
+        <button data-capture-photo type="button" class="postcard-shutter" aria-label="拍照"><span></span></button>
+        <label class="postcard-camera-secondary flex items-center gap-2">
+          <input data-camera-timer type="checkbox" class="accent-[#3c7163]" />
+          3 秒倒數
+        </label>
+      </div>
+      <p class="mt-4 text-center text-xs leading-5 text-ink/45">只有按下拍照後的影像會送進目前頁面的 Canvas；關閉視窗會立即停止鏡頭。</p>
+    </div>
+  </dialog>
+
+  <footer class="storybook-footer bg-[#1b302a] px-4 py-10 text-white/65">
+    <div class="container-shell flex flex-col justify-between gap-3 text-sm sm:flex-row">
+      <p>© JimmyPark.org</p>
+      <p>照片本機處理・不會上傳或儲存</p>
+    </div>
+  </footer>
+
+  <script>
+    import '../scripts/stamps';
+    import '../scripts/postcard';
+  </script>
+</BaseLayout>
+
+<style>
+  .postcard-step-chip {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: .55rem;
+    border: 1px solid rgb(60 113 99 / .14);
+    border-radius: 999px;
+    background: rgb(255 255 255 / .68);
+    padding: .55rem .85rem;
+    color: var(--color-forest);
+    font-size: .8rem;
+    font-weight: 700;
+  }
+  .postcard-step-chip span {
+    display: grid;
+    width: 1.55rem;
+    height: 1.55rem;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-forest);
+    color: white;
+    font-size: .72rem;
+  }
+  .postcard-control-card { border-radius: 1.75rem; }
+  .postcard-step-heading { display: flex; align-items: flex-start; gap: .85rem; }
+  .postcard-step-heading > span { display: grid; width: 2.35rem; height: 2.35rem; flex: 0 0 auto; place-items: center; border-radius: 50%; font-weight: 700; }
+  .postcard-step-heading h2 { color: var(--color-forest-dark); font-size: 1.35rem; line-height: 1.25; font-weight: 700; }
+  .postcard-step-heading p { margin-top: .25rem; color: rgb(42 52 48 / .58); font-size: .82rem; line-height: 1.5; }
+  .postcard-choice { position: relative; display: flex; min-height: 5rem; align-items: center; gap: .75rem; border: 2px solid rgb(60 113 99 / .12); border-radius: 1.15rem; background: rgb(255 255 255 / .68); padding: .75rem; text-align: left; transition: .2s ease; }
+  .postcard-choice:hover { border-color: rgb(60 113 99 / .38); background: white; }
+  .postcard-choice:disabled { cursor: not-allowed; filter: grayscale(.35); opacity: .55; }
+  .postcard-choice:disabled:hover { border-color: rgb(60 113 99 / .12); background: rgb(255 255 255 / .68); transform: none; }
+  .postcard-choice strong, .postcard-choice small { display: block; }
+  .postcard-choice strong { color: var(--color-forest-dark); font-size: .88rem; }
+  .postcard-choice small { margin-top: .15rem; color: rgb(42 52 48 / .48); font-size: .68rem; }
+  .choice-check { position: absolute; top: .45rem; right: .45rem; display: grid; width: 1.35rem; height: 1.35rem; place-items: center; border: 2px solid rgb(60 113 99 / .18); border-radius: 50%; color: transparent; font-size: .68rem; }
+  .postcard-choice[aria-pressed="true"] { border-color: var(--color-forest); background: rgb(231 240 233 / .9); box-shadow: 3px 4px 0 rgb(60 113 99 / .1); }
+  .postcard-choice[aria-pressed="true"] .choice-check { border-color: var(--color-forest); background: var(--color-forest); color: white; }
+  .format-shape { width: 2.55rem; max-height: 3.55rem; flex: 0 0 auto; border: 2px solid rgb(60 113 99 / .55); border-radius: .3rem; background: linear-gradient(150deg,#fff7db,#e8f1ed); box-shadow: 2px 2px 0 rgb(60 113 99 / .12); }
+  .template-swatch { width: 3rem; height: 3rem; flex: 0 0 auto; border: 2px solid rgb(255 255 255 / .7); border-radius: 38% 62% 58% 42% / 45% 44% 56% 55%; box-shadow: 2px 3px 0 rgb(41 79 71 / .12); }
+  .postcard-source-button { display: flex; min-height: 5.2rem; align-items: center; gap: .7rem; border: 2px solid rgb(60 113 99 / .14); border-radius: 1.2rem; background: rgb(255 255 255 / .72); padding: .8rem; text-align: left; transition: .2s ease; }
+  .postcard-source-button:hover { border-color: var(--color-forest); background: white; transform: translateY(-1px); }
+  .postcard-source-button svg { width: 1.8rem; flex: 0 0 auto; color: var(--color-forest); }
+  .postcard-source-button strong, .postcard-source-button small { display: block; }
+  .postcard-source-button strong { color: var(--color-forest-dark); font-size: .85rem; }
+  .postcard-source-button small { margin-top: .15rem; color: rgb(42 52 48 / .48); font-size: .68rem; }
+  .postcard-field span { display: block; margin-bottom: .35rem; color: var(--color-forest-dark); font-size: .78rem; font-weight: 700; }
+  .postcard-field input { width: 100%; border: 2px solid rgb(60 113 99 / .13); border-radius: .95rem; background: rgb(255 255 255 / .8); padding: .75rem .85rem; color: var(--color-ink); outline: none; }
+  .postcard-field input:focus { border-color: var(--color-forest); }
+  .postcard-phrase { border-radius: 999px; background: rgb(60 113 99 / .08); padding: .4rem .65rem; color: var(--color-forest); font-size: .7rem; font-weight: 700; }
+  .postcard-slider { display: grid; grid-template-columns: 1fr auto; gap: .35rem; color: var(--color-forest-dark); font-size: .75rem; font-weight: 700; }
+  .postcard-slider output { color: rgb(42 52 48 / .48); font-weight: 500; }
+  .postcard-slider input { grid-column: 1 / -1; width: 100%; accent-color: var(--color-forest); }
+  .postcard-tool { border: 2px solid rgb(60 113 99 / .13); border-radius: .8rem; background: white; padding: .7rem .35rem; color: var(--color-forest); font-size: .75rem; font-weight: 700; }
+  .postcard-tool:disabled { cursor: not-allowed; opacity: .38; }
+  .postcard-preview-shell { overflow: hidden; border: 2px solid rgb(60 113 99 / .13); border-radius: 2rem; background: #e8f1ed; padding: .75rem; box-shadow: 8px 10px 0 rgb(60 113 99 / .07); }
+  .postcard-preview-label { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .3rem .5rem .75rem; color: rgb(42 52 48 / .52); font-size: .7rem; font-weight: 700; }
+  .postcard-canvas-stage { display: grid; min-height: 22rem; max-height: 72vh; place-items: center; overflow: hidden; border-radius: 1.4rem; background: rgb(255 255 255 / .48); padding: .65rem; }
+  .postcard-canvas { display: block; width: auto; max-width: 100%; height: auto; max-height: calc(72vh - 1.3rem); touch-action: none; cursor: grab; border-radius: 1.15rem; background: #fff8e8; box-shadow: 0 18px 45px rgb(42 52 48 / .16); }
+  .postcard-canvas:active { cursor: grabbing; }
+  .postcard-camera-dialog { width: min(94vw, 760px); max-width: none; border: 0; border-radius: 2rem; background: transparent; padding: 0; }
+  .postcard-camera-dialog::backdrop { background: rgb(18 31 28 / .78); backdrop-filter: blur(7px); }
+  .postcard-camera-panel { border: 2px solid rgb(255 255 255 / .7); border-radius: 2rem; background: #fff9ec; padding: 1.25rem; box-shadow: 0 30px 90px rgb(0 0 0 / .35); }
+  .postcard-camera-viewport { position: relative; display: grid; max-height: 65vh; place-items: center; overflow: hidden; border-radius: 1.4rem; background: #1c2926; aspect-ratio: 4 / 5; }
+  .postcard-camera-viewport video { width: 100%; height: 100%; object-fit: cover; }
+  .postcard-camera-viewport[data-facing="user"] video { transform: scaleX(-1); }
+  .postcard-camera-guide { position: absolute; inset: 8%; display: grid; place-items: end center; border: 2px dashed rgb(255 255 255 / .78); border-radius: 1.2rem; box-shadow: 0 0 0 999px rgb(0 0 0 / .12); }
+  .postcard-camera-guide span { margin-bottom: .6rem; border-radius: 999px; background: rgb(20 35 31 / .68); padding: .35rem .65rem; color: white; font-size: .68rem; font-weight: 700; }
+  .postcard-camera-countdown { position: absolute; inset: 0; display: grid; place-items: center; background: rgb(22 35 32 / .22); color: white; font-size: 7rem; font-weight: 700; text-shadow: 0 4px 20px rgb(0 0 0 / .3); }
+  .postcard-camera-countdown[hidden] { display: none; }
+  .postcard-camera-secondary { border: 1px solid rgb(60 113 99 / .18); border-radius: 999px; background: white; padding: .7rem 1rem; color: var(--color-forest); font-size: .78rem; font-weight: 700; }
+  .postcard-shutter { display: grid; width: 4.2rem; height: 4.2rem; place-items: center; border: 3px solid var(--color-forest); border-radius: 50%; background: white; }
+  .postcard-shutter span { width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-coral); transition: transform .15s ease; }
+  .postcard-shutter:active span { transform: scale(.88); }
+  @media (max-width: 639px) {
+    .postcard-control-card { border-radius: 1.4rem; }
+    .postcard-canvas-stage { min-height: 18rem; max-height: 54vh; }
+    .postcard-canvas { max-height: calc(54vh - 1.3rem); }
+    .postcard-preview-shell { border-radius: 1.5rem; }
+    .postcard-camera-panel { padding: 1rem; }
+    .postcard-camera-viewport { max-height: 58vh; }
+  }
+</style>

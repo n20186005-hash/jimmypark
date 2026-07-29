@@ -1,0 +1,131 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const principles = [
+  {
+    title: '不設會員系統',
+    text: '本站不提供註冊、登入、留言、訂票或付款功能。散步集章只將景點代號保存在目前瀏覽器的 localStorage，不包含姓名、照片或定位。',
+  },
+  {
+    title: '只看整體使用情形',
+    text: '本站使用 Google Analytics 4 了解頁面瀏覽、裝置類型與大致使用趨勢，用於改善內容與閱讀體驗。',
+  },
+  {
+    title: '外部服務各自負責',
+    text: 'Google 地圖、分析工具與外部授權連結由各服務提供者處理；開啟或使用時，適用其各自的政策。',
+  },
+  {
+    title: '照片只留在裝置',
+    text: '紀念卡製作器在瀏覽器內讀取、編輯與輸出照片，不會將照片、檔名或輸入文字上傳或儲存。',
+  },
+];
+---
+
+<BaseLayout
+  title="隱私與聲明｜JimmyPark.org"
+  description="JimmyPark.org 的隱私、第三方服務、非官方網站聲明與照片授權說明。"
+>
+  <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="/" class="group flex items-center gap-3" aria-label="返回 JimmyPark.org 首頁">
+        <span class="storybook-logo grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f4c95e" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/65">隱私與聲明</span>
+        </span>
+      </a>
+      <a href="/" class="rounded-full bg-forest px-5 py-2.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-dark">
+        返回首頁
+      </a>
+    </div>
+  </header>
+
+  <main id="main-content" class="storybook overflow-hidden pt-[4.5rem]">
+    <section class="storybook-section storybook-section-sky relative px-4 py-20 sm:py-28">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="doodle-star doodle-star-one !text-sun">✦</span>
+        <span class="doodle-star doodle-star-two !text-coral">✧</span>
+      </div>
+      <div class="container-shell relative">
+        <p class="section-kicker">PRIVACY & NOTICE</p>
+        <h1 class="mt-5 max-w-4xl text-5xl leading-tight font-bold text-forest-dark sm:text-7xl">隱私與聲明</h1>
+        <p class="mt-6 max-w-3xl text-lg leading-8 text-ink/68">
+          這是一個不需要登入的獨立旅遊指南。以下說明本站如何使用分析工具、嵌入地圖與外部連結，以及內容和照片的權利歸屬。
+        </p>
+      </div>
+    </section>
+
+    <section class="storybook-section storybook-section-cream section-pad">
+      <div class="container-shell">
+        <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {principles.map((item) => (
+            <article class="card-soft p-7 sm:p-8">
+              <h2 class="text-2xl font-bold text-forest-dark">{item.title}</h2>
+              <p class="mt-4 text-sm leading-7 text-ink/65">{item.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <div class="mt-14 grid gap-6 lg:grid-cols-2">
+          <article class="storybook-map-card bg-[#fffdf7] p-7 sm:p-10">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">分析與 Cookie</p>
+            <h2 class="mt-3 text-3xl font-bold text-forest-dark">Google Analytics 4</h2>
+            <div class="mt-5 space-y-4 leading-7 text-ink/68">
+              <p>本站使用 Google Analytics 4 收集彙整性的使用資料，例如瀏覽頁面、裝置類別、來源管道與互動事件。</p>
+              <p>分析服務可能使用 Cookie 或類似技術，並由 Google 按其政策處理相關資訊。你可以透過瀏覽器設定限制或刪除 Cookie。</p>
+            </div>
+          </article>
+
+          <article class="storybook-map-card bg-[#fffdf7] p-7 sm:p-10">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">第三方內容</p>
+            <h2 class="mt-3 text-3xl font-bold text-forest-dark">Google 地圖與外部連結</h2>
+            <div class="mt-5 space-y-4 leading-7 text-ink/68">
+              <p>首頁嵌入 Google 地圖，瀏覽器會直接連線至 Google 的服務。地圖可能取得 IP 位址、瀏覽器資訊與來源頁面等技術資料。</p>
+              <p>本站也提供地圖導航及照片授權來源連結。離開本站後，資料處理方式由目標網站的隱私政策決定。</p>
+            </div>
+          </article>
+
+          <article class="storybook-map-card bg-[#fffdf7] p-7 sm:p-10">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">網站定位</p>
+            <h2 class="mt-3 text-3xl font-bold text-forest-dark">非官方獨立指南</h2>
+            <div class="mt-5 space-y-4 leading-7 text-ink/68">
+              <p>JimmyPark.org 為獨立製作的旅遊資訊網站，與幾米品牌、宜蘭縣政府、臺灣鐵路公司及各景點營運單位沒有隸屬、委託或授權關係。</p>
+              <p>開放狀況、交通、費用與設施可能調整，實際安排請以現場公告及相關單位發布的資訊為準。</p>
+            </div>
+          </article>
+
+          <article class="storybook-map-card bg-[#fffdf7] p-7 sm:p-10">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">內容與圖片</p>
+            <h2 class="mt-3 text-3xl font-bold text-forest-dark">著作權與照片授權</h2>
+            <div class="mt-5 space-y-4 leading-7 text-ink/68">
+              <p>本站原創文字、版面與程式內容由本站保留權利；景點名稱、作品名稱及相關品牌權利屬於各自權利人。</p>
+              <p>景點照片依各自的 Creative Commons 條款使用，並在首頁的授權摘要中標示作品、作者、授權方式與來源連結。</p>
+            </div>
+          </article>
+        </div>
+
+        <div class="storybook-cta mt-14 px-7 py-10 text-center text-white sm:px-12">
+          <p class="text-sm font-bold tracking-[0.18em] text-[#f7d876]">YOUR CHOICE</p>
+          <h2 class="mt-4 text-3xl font-bold sm:text-4xl">你可以控制瀏覽器中的資料</h2>
+          <p class="mx-auto mt-4 max-w-2xl leading-7 text-white/70">若不希望分析工具保存 Cookie，可使用瀏覽器的封鎖、清除或無痕瀏覽功能；集章進度也可隨時在集章卡中清除。</p>
+          <div class="mt-7 flex flex-wrap justify-center gap-3">
+            <a href="/postcard" class="inline-flex rounded-full bg-sun px-6 py-3.5 font-bold text-forest-dark">製作旅行紀念卡</a>
+            <a href="/" class="inline-flex rounded-full bg-white px-6 py-3.5 font-bold text-forest-dark">回到旅遊指南</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="storybook-footer bg-[#1b302a] px-4 py-10 text-white/65">
+    <div class="container-shell flex flex-col justify-between gap-3 text-sm sm:flex-row">
+      <p>© JimmyPark.org</p>
+      <p>獨立旅遊指南・非官方網站</p>
+    </div>
+  </footer>
+</BaseLayout>

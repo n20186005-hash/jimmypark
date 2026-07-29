@@ -1,0 +1,415 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CompositionDiagram from '../components/CompositionDiagram.astro';
+import Picture from '../components/Picture.astro';
+import { photoGuides } from '../data/photoGuides';
+import { site } from '../data/site';
+
+const routeHashBySpot = {
+  station: 'quick',
+  forest: 'classic',
+  train: 'classic',
+  plaza: 'classic',
+  happy: 'classic',
+} as const;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: '宜蘭幾米公園拍照指南',
+  description: '宜蘭火車站、丟丟噹森林、星空列車、幾米主題廣場與幸福轉運站的手機拍照建議。',
+  itemListElement: photoGuides.map((guide, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: guide.title,
+    url: `${site.url}/photo-guide#${guide.id}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="宜蘭幾米公園拍照指南｜5 個手機機位與構圖示意"
+  description="整理宜蘭火車站、丟丟噹森林、星空列車、幾米主題廣場與幸福轉運站的手機鏡頭、站位、光線、雨天與安全拍攝建議。"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
+    <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
+      <a href="/" class="group flex items-center gap-3" aria-label="返回 JimmyPark.org 首頁">
+        <span class="storybook-logo grid size-10 place-items-center rounded-2xl bg-forest text-paper shadow-sm transition-transform group-hover:-rotate-6">
+          <svg viewBox="0 0 32 32" class="size-6" aria-hidden="true">
+            <path d="M7 24h18M10 7v14M22 7v14M10 11h12M10 17h12" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" />
+            <circle cx="16" cy="7" r="2.5" fill="#f4c95e" />
+          </svg>
+        </span>
+        <span>
+          <span class="block text-sm font-bold tracking-[0.16em] text-forest">JIMMY PARK</span>
+          <span class="block text-xs text-ink/65">手機拍照指南</span>
+        </span>
+      </a>
+      <div class="flex items-center gap-2">
+        <a href="/route" class="hidden rounded-full bg-sun/35 px-4 py-2 text-sm font-bold text-forest-dark transition hover:bg-sun/55 sm:inline-flex">散步路線</a>
+        <a href="/" class="rounded-full border border-forest/15 bg-white/60 px-4 py-2 text-sm font-bold text-forest transition hover:bg-white">返回指南</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="storybook overflow-hidden pt-[4.5rem]">
+    <section class="photo-guide-hero storybook-section relative overflow-hidden bg-[#f3eadb] px-4 py-14 sm:py-20 lg:py-24">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <span class="doodle-star doodle-star-one !text-sun">✦</span>
+        <span class="doodle-star doodle-star-two !text-coral">✧</span>
+      </div>
+      <div class="container-shell relative grid items-center gap-10 lg:grid-cols-[.9fr_1.1fr] lg:gap-16">
+        <div>
+          <p class="section-kicker">FRAME THE YILAN STORY</p>
+          <h1 class="mt-5 max-w-3xl text-5xl leading-[1.1] font-bold text-forest-dark sm:text-7xl">先找對位置，再按下快門</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-8 text-ink/68">
+            五個景點、五張原創機位圖。從攝影者、人物到背景主體，先看懂三者的位置，再決定使用手機 0.5× 或 1×。
+          </p>
+          <div class="mt-7 flex flex-wrap gap-2 text-sm font-bold text-forest">
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">手機鏡頭建議</span>
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">晴雨天拍法</span>
+            <span class="rounded-full border border-forest/15 bg-white/65 px-4 py-2">安全站位</span>
+          </div>
+        </div>
+
+        <div class="photo-hero-collage">
+          <Picture
+            name="hero"
+            alt="宜蘭火車站繪本風格外觀與長頸鹿裝置"
+            class="photo-hero-main aspect-[4/3] w-full rounded-[2.2rem] object-cover"
+            loading="eager"
+            fetchpriority="high"
+            sizes="(min-width: 1024px) 50vw, 100vw"
+          />
+          <div class="photo-focus-card">
+            <svg viewBox="0 0 48 48" class="size-10 text-forest" aria-hidden="true">
+              <path d="M7 18V8h10M31 8h10v10M41 30v10H31M17 40H7V30" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+              <circle cx="24" cy="24" r="7" fill="none" stroke="currentColor" stroke-width="3" />
+            </svg>
+            <div>
+              <strong>攝影者 → 人物 → 背景</strong>
+              <small>先排位置，照片自然有故事</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="storybook-section storybook-section-cream px-4 pb-12 pt-20 sm:pb-16">
+      <div class="container-shell">
+        <nav class="photo-spot-nav" aria-label="選擇拍照景點">
+          {photoGuides.map((guide, index) => (
+            <a href={`#${guide.id}`}>
+              <span>{index + 1}</span>
+              <strong>{guide.title}</strong>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </section>
+
+    {photoGuides.map((guide, index) => (
+      <section
+        id={guide.id}
+        class:list={[
+          'photo-guide-section storybook-section scroll-mt-20 px-4 py-16 sm:py-24',
+          index % 2 === 0 ? 'bg-[#fffdf7]' : 'storybook-section-sky bg-paper',
+        ]}
+      >
+        <div class="container-shell">
+          <div class="grid gap-9 lg:grid-cols-[.86fr_1.14fr] lg:gap-14">
+            <div class:list={['space-y-5', index % 2 === 1 && 'lg:order-2']}>
+              <div class="photo-guide-image">
+                <Picture
+                  name={guide.image}
+                  alt={guide.alt}
+                  class="aspect-[4/3] w-full rounded-[1.8rem] object-cover"
+                  sizes="(min-width: 1024px) 42vw, 100vw"
+                />
+                <div class="photo-guide-image-label">
+                  <span>{guide.eyebrow}</span>
+                  <strong>{guide.title}</strong>
+                </div>
+              </div>
+              <CompositionDiagram variant={guide.id} title={guide.title} />
+            </div>
+
+            <article class="min-w-0">
+              <p class="text-xs font-bold tracking-[0.18em] text-coral">PHOTO SPOT {String(index + 1).padStart(2, '0')}</p>
+              <h2 class="mt-3 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">{guide.title}</h2>
+              <p class="mt-4 text-lg leading-8 text-ink/68">{guide.bestFor}</p>
+
+              <dl class="mt-7 grid gap-3 sm:grid-cols-3">
+                <div class="photo-fact">
+                  <dt>鏡頭</dt>
+                  <dd>{guide.lens}</dd>
+                </div>
+                <div class="photo-fact">
+                  <dt>光線</dt>
+                  <dd>{guide.light}</dd>
+                </div>
+                <div class="photo-fact">
+                  <dt>避開人群</dt>
+                  <dd>{guide.crowd}</dd>
+                </div>
+              </dl>
+
+              <div class="mt-8">
+                <h3 class="text-2xl font-bold text-forest-dark">三步排好構圖</h3>
+                <ol class="mt-5 grid gap-3">
+                  <li class="photo-step">
+                    <span>1</span>
+                    <div><strong>攝影者站位</strong><p>{guide.position}</p></div>
+                  </li>
+                  <li class="photo-step">
+                    <span>2</span>
+                    <div><strong>人物位置</strong><p>{guide.subject}</p></div>
+                  </li>
+                  <li class="photo-step">
+                    <span>3</span>
+                    <div><strong>背景保留</strong><p>{guide.background}</p></div>
+                  </li>
+                </ol>
+              </div>
+
+              <div class="mt-7 grid gap-3 sm:grid-cols-2">
+                <div class="weather-photo-card weather-photo-sun">
+                  <span aria-hidden="true">☀</span>
+                  <div><strong>晴天</strong><p>{guide.sunny}</p></div>
+                </div>
+                <div class="weather-photo-card weather-photo-rain">
+                  <span aria-hidden="true">☂</span>
+                  <div><strong>雨天</strong><p>{guide.rainy}</p></div>
+                </div>
+              </div>
+
+              <div class="mt-5 flex items-start gap-3 rounded-[1.2rem] border-l-4 border-coral bg-coral/8 px-5 py-4 text-sm leading-6 text-ink/65">
+                <svg viewBox="0 0 24 24" class="mt-0.5 size-5 shrink-0 text-coral" aria-hidden="true">
+                  <path d="M12 4 3.5 19h17L12 4Z" fill="none" stroke="currentColor" stroke-width="1.8" />
+                  <path d="M12 9v4m0 3v.1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+                <p><strong class="text-forest-dark">安全提醒：</strong>{guide.safety}</p>
+              </div>
+
+              <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  class="photo-stamp-button"
+                  data-stamp-toggle={guide.id}
+                  aria-pressed="false"
+                >
+                  <span aria-hidden="true">章</span>
+                  <span data-stamp-action-label>蓋下這一站</span>
+                </button>
+                <a href={`/postcard?style=${guide.template}`} class="inline-flex items-center justify-center rounded-full bg-forest px-6 py-3.5 font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-dark">
+                  用這個風格製作紀念卡
+                </a>
+                <a href={`/route#${routeHashBySpot[guide.id]}`} class="inline-flex items-center justify-center rounded-full border-2 border-forest/15 bg-white/65 px-6 py-3 font-bold text-forest transition hover:border-forest/35 hover:bg-white">
+                  查看沿途走法
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <section class="storybook-section bg-sun px-4 py-16 sm:py-20">
+      <div class="container-shell rounded-[2rem] bg-forest-dark px-6 py-11 text-center text-white sm:px-12 lg:py-14">
+        <p class="text-xs font-bold tracking-[0.18em] text-[#f7d876]">PHOTO ETIQUETTE</p>
+        <h2 class="mx-auto mt-3 max-w-3xl text-3xl font-bold sm:text-4xl">好照片不需要占住道路，也不需要碰触作品</h2>
+        <p class="mx-auto mt-5 max-w-2xl leading-7 text-white/68">
+          先觀察人流、快速完成構圖、拍完立即讓出位置。公共藝術、道路與其他旅客都應留在舒適的距離裡。
+        </p>
+        <a href="/route" class="mt-7 inline-flex rounded-full border border-white/20 bg-white/5 px-6 py-3 font-bold text-white/85 transition hover:bg-white/10 hover:text-white">帶著拍照指南開始散步</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="storybook-footer bg-[#1b302a] px-4 py-10 text-white/65">
+    <div class="container-shell flex flex-col justify-between gap-3 text-sm sm:flex-row">
+      <p>© JimmyPark.org</p>
+      <div class="flex flex-wrap gap-x-5 gap-y-2">
+        <a href="/" class="hover:text-white">景點指南</a>
+        <a href="/route" class="hover:text-white">散步路線</a>
+        <a href="/postcard" class="hover:text-white">製作紀念卡</a>
+        <a href="/privacy" class="hover:text-white">隱私與聲明</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    import '../scripts/stamps';
+  </script>
+</BaseLayout>
+
+<style>
+  .photo-hero-collage { position: relative; padding-bottom: 2.6rem; }
+  .photo-hero-main {
+    border: 3px solid rgb(255 255 255 / .75);
+    box-shadow: 10px 12px 0 rgb(60 113 99 / .1);
+    transform: rotate(1deg);
+  }
+  .photo-focus-card {
+    position: absolute;
+    right: 1.2rem;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    width: min(90%, 22rem);
+    border: 2px dashed rgb(60 113 99 / .22);
+    border-radius: 1.4rem;
+    background: #fff9e8;
+    padding: 1rem 1.1rem;
+    box-shadow: 0 14px 35px rgb(42 52 48 / .14);
+    transform: rotate(-1.3deg);
+  }
+  .photo-focus-card strong, .photo-focus-card small { display: block; }
+  .photo-focus-card strong { color: var(--color-forest-dark); }
+  .photo-focus-card small { margin-top: .2rem; color: rgb(42 52 48 / .48); font-size: .72rem; }
+  .photo-spot-nav {
+    display: grid;
+    gap: .65rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .photo-spot-nav a {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: .7rem;
+    border: 2px solid rgb(60 113 99 / .12);
+    border-radius: 1.1rem;
+    background: rgb(255 255 255 / .7);
+    padding: .8rem;
+    color: var(--color-forest);
+    font-size: .78rem;
+    transition: .2s ease;
+  }
+  .photo-spot-nav a:hover { border-color: rgb(60 113 99 / .4); background: white; transform: translateY(-2px); }
+  .photo-spot-nav span {
+    display: grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-forest);
+    color: white;
+    font-size: .7rem;
+    font-weight: 700;
+  }
+  .photo-guide-image {
+    position: relative;
+    border: 2px solid rgb(60 113 99 / .15);
+    border-radius: 2.1rem;
+    background: #e7f0e9;
+    padding: .6rem;
+    box-shadow: 0 16px 42px rgb(42 52 48 / .11);
+  }
+  .photo-guide-image picture, .photo-guide-image > img {
+    position: relative;
+    z-index: 1;
+    display: block;
+  }
+  .photo-guide-image-label {
+    position: absolute;
+    z-index: 2;
+    right: 1.3rem;
+    bottom: 1.2rem;
+    max-width: 70%;
+    border-radius: 1rem;
+    background: rgb(255 249 232 / .92);
+    padding: .7rem .9rem;
+    box-shadow: 0 8px 25px rgb(42 52 48 / .14);
+  }
+  .photo-guide-image-label span, .photo-guide-image-label strong { display: block; }
+  .photo-guide-image-label span { color: var(--color-coral); font-size: .62rem; font-weight: 700; letter-spacing: .08em; }
+  .photo-guide-image-label strong { margin-top: .2rem; color: var(--color-forest-dark); }
+  .photo-fact {
+    border: 2px solid rgb(60 113 99 / .11);
+    border-radius: 1.15rem;
+    background: rgb(255 255 255 / .72);
+    padding: 1rem;
+  }
+  .photo-fact dt { color: var(--color-coral); font-size: .68rem; font-weight: 700; letter-spacing: .08em; }
+  .photo-fact dd { margin-top: .45rem; color: var(--color-forest-dark); font-size: .78rem; font-weight: 700; line-height: 1.55; }
+  .photo-step {
+    display: flex;
+    gap: .9rem;
+    border: 2px solid rgb(60 113 99 / .1);
+    border-radius: 1.2rem;
+    background: rgb(255 255 255 / .7);
+    padding: 1rem;
+  }
+  .photo-step > span {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--color-forest);
+    color: white;
+    font-size: .75rem;
+    font-weight: 700;
+  }
+  .photo-step strong { color: var(--color-forest-dark); }
+  .photo-step p { margin-top: .25rem; color: rgb(42 52 48 / .64); font-size: .88rem; line-height: 1.65; }
+  .weather-photo-card {
+    display: flex;
+    gap: .8rem;
+    border-radius: 1.15rem;
+    padding: 1rem;
+  }
+  .weather-photo-card > span { font-size: 1.5rem; line-height: 1; }
+  .weather-photo-card strong { color: var(--color-forest-dark); }
+  .weather-photo-card p { margin-top: .25rem; color: rgb(42 52 48 / .62); font-size: .82rem; line-height: 1.6; }
+  .weather-photo-sun { background: rgb(244 201 94 / .18); }
+  .weather-photo-rain { background: rgb(151 191 199 / .2); }
+  .photo-stamp-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    border: 2px solid rgb(216 120 96 / .25);
+    border-radius: 999px;
+    background: rgb(216 120 96 / .1);
+    padding: .75rem 1rem;
+    color: var(--color-coral);
+    font-weight: 700;
+    transition: .2s ease;
+  }
+  .photo-stamp-button > span:first-child {
+    display: grid;
+    width: 1.7rem;
+    height: 1.7rem;
+    place-items: center;
+    border: 1px dashed currentColor;
+    border-radius: 50%;
+    font-size: .65rem;
+  }
+  .photo-stamp-button:hover { border-color: var(--color-coral); background: rgb(216 120 96 / .16); }
+  .photo-stamp-button[aria-pressed="true"] {
+    border-color: var(--color-coral);
+    background: var(--color-coral);
+    color: white;
+  }
+  @media (max-width: 799px) {
+    .photo-spot-nav {
+      grid-auto-columns: minmax(10rem, 42vw);
+      grid-auto-flow: column;
+      grid-template-columns: none;
+      overflow-x: auto;
+      padding-bottom: .5rem;
+      scroll-snap-type: x proximity;
+    }
+    .photo-spot-nav a { scroll-snap-align: start; }
+  }
+  @media (max-width: 639px) {
+    .photo-focus-card { right: .2rem; width: 92%; }
+    .photo-guide-image-label { right: 1rem; bottom: 1rem; }
+  }
+</style>

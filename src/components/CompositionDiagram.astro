@@ -1,0 +1,106 @@
+---
+interface Props {
+  variant: 'station' | 'forest' | 'train' | 'plaza' | 'happy';
+  title: string;
+}
+
+const { variant, title } = Astro.props;
+---
+
+<figure class="composition-diagram">
+  <svg viewBox="0 0 560 360" role="img" aria-labelledby={`diagram-title-${variant} diagram-desc-${variant}`}>
+    <title id={`diagram-title-${variant}`}>{title}拍攝位置示意圖</title>
+    <desc id={`diagram-desc-${variant}`}>從下方攝影位置拍向中央人物與上方背景主體的原創構圖示意。</desc>
+
+    <rect x="8" y="8" width="544" height="344" rx="34" fill="#f8f2df" stroke="#3c7163" stroke-opacity=".2" stroke-width="3" />
+    <path d="M189 28v304M371 28v304M28 119h504M28 241h504" fill="none" stroke="#3c7163" stroke-opacity=".12" stroke-width="2" stroke-dasharray="8 9" />
+
+    {variant === 'station' && (
+      <g fill="none" stroke="#3c7163" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M95 133h320v88H95zM78 133l177-73 177 73M146 167h55v54m71-54h80v54" />
+        <path d="M443 86v133m-18-88 18-33 18 33m-31 14h26" />
+        <circle cx="443" cy="78" r="13" fill="#f4c95e" stroke="none" />
+      </g>
+    )}
+
+    {variant === 'forest' && (
+      <g fill="none" stroke="#3c7163" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M72 210V84h416v126M72 105h416M118 84l42 126M206 84l42 126M294 84l42 126M382 84l42 126" />
+        <path d="M100 196c36-28 67-28 103 0 36-28 67-28 103 0 36-28 67-28 103 0" stroke="#79a18f" />
+      </g>
+    )}
+
+    {variant === 'train' && (
+      <g fill="none" stroke="#3c7163" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M82 76h396M145 76v46m270-46v46" />
+        <rect x="151" y="115" width="258" height="82" rx="18" />
+        <path d="M177 145h49m28 0h49m28 0h49M180 197v18m200-18v18" />
+        <circle cx="200" cy="204" r="15" fill="#f4c95e" />
+        <circle cx="360" cy="204" r="15" fill="#f4c95e" />
+      </g>
+    )}
+
+    {variant === 'plaza' && (
+      <g fill="none" stroke="#3c7163" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M86 212 474 88M112 229 495 110" stroke="#79a18f" />
+        <rect x="98" y="118" width="96" height="75" rx="12" />
+        <rect x="338" y="86" width="118" height="92" rx="14" />
+        <path d="M130 118v-17h32v17m214-32V65h42v21" />
+        <circle cx="124" cy="194" r="10" fill="#f4c95e" />
+        <circle cx="170" cy="194" r="10" fill="#f4c95e" />
+      </g>
+    )}
+
+    {variant === 'happy' && (
+      <g fill="none" stroke="#3c7163" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="82" y="91" width="396" height="129" rx="22" />
+        <path d="M107 122h82v55h-82zm113 0h82v55h-82zm113 0h118v55H333zM82 190h396" />
+        <circle cx="160" cy="220" r="20" fill="#f4c95e" />
+        <circle cx="400" cy="220" r="20" fill="#f4c95e" />
+      </g>
+    )}
+
+    <g>
+      <circle cx="280" cy="217" r="24" fill="#d97860" />
+      <path d="M242 282c6-37 19-55 38-55s32 18 38 55" fill="#d97860" />
+      <rect x="246" y="287" width="68" height="26" rx="13" fill="#d97860" />
+      <text x="280" y="338" text-anchor="middle" fill="#7d544b" font-size="16" font-weight="700">人物位置</text>
+    </g>
+
+    <g fill="none" stroke="#f0b845" stroke-width="5" stroke-linecap="round">
+      <path d="m75 312 159-65M485 312 326 247" stroke-dasharray="9 9" />
+    </g>
+
+    <g transform="translate(32 279)">
+      <rect width="72" height="48" rx="12" fill="#294f47" />
+      <circle cx="36" cy="24" r="12" fill="none" stroke="#fff9e8" stroke-width="4" />
+      <path d="M17 0 25-10h22l8 10" fill="#294f47" />
+    </g>
+    <text x="68" y="345" text-anchor="middle" fill="#294f47" font-size="16" font-weight="700">攝影位置</text>
+    <text x="280" y="43" text-anchor="middle" fill="#294f47" font-size="17" font-weight="700">背景主體</text>
+  </svg>
+  <figcaption>虛線代表取景方向；實際站位請依現場人流與安全空間調整。</figcaption>
+</figure>
+
+<style>
+  .composition-diagram {
+    overflow: hidden;
+    border: 2px solid rgb(60 113 99 / .13);
+    border-radius: 1.6rem;
+    background: #fffaf0;
+    padding: .75rem;
+    box-shadow: 5px 6px 0 rgb(60 113 99 / .07);
+  }
+  .composition-diagram svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .composition-diagram figcaption {
+    padding: .55rem .4rem .2rem;
+    color: rgb(42 52 48 / .5);
+    font-size: .7rem;
+    line-height: 1.5;
+    text-align: center;
+  }
+</style>
