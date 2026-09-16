@@ -1,12 +1,36 @@
 {
-  "name": "宜蘭幾米公園旅遊指南",
-  "short_name": "JimmyPark.org",
+  "id": "/",
+  "name": "宜蘭幾米公園｜幾米主題廣場散步指南",
+  "short_name": "幾米公園",
+  "description": "宜蘭幾米公園（幾米主題廣場）非營利獨立旅遊指南：即時天氣、散步路線、拍照重點、交通停車與周邊設施。",
   "lang": "zh-Hant-TW",
+  "dir": "ltr",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#fff7e7",
   "theme_color": "#3c7163",
+  "categories": ["travel", "education"],
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "散步路線", "url": "/route" },
+    { "name": "即時天氣", "url": "/#weather" },
+    { "name": "拍照指南", "url": "/photo-guide" },
+    { "name": "附近美食", "url": "/food" },
+    { "name": "製作紀念卡", "url": "/postcard" }
   ]
 }

@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Picture from '../components/Picture.astro';
+import WeatherPanel from '../components/WeatherPanel.astro';
+import SeasonTable from '../components/SeasonTable.astro';
+import AudiencePlans from '../components/AudiencePlans.astro';
+import RecommendedRoutes from '../components/RecommendedRoutes.astro';
+import FacilityGrid from '../components/FacilityGrid.astro';
+import RatingPanel from '../components/RatingPanel.astro';
+import HistoryStory from '../components/HistoryStory.astro';
+import StewardshipSection from '../components/StewardshipSection.astro';
+import SourcesSection from '../components/SourcesSection.astro';
 import {
   site,
   quickFacts,
@@ -9,69 +18,154 @@ import {
   faqs,
   photoCredits,
 } from '../data/site';
+import {
+  attraction,
+  entityStatement,
+  nearbyClusterStatement,
+  seo,
+} from '../data/attraction';
+import { landmarks } from '../data/landmarks';
+import { officialAlertSource } from '../data/weather';
+
+/**
+ * 實體綁定用的節點 id（知識圖譜錨點）
+ * 注意：評分與評價只放在頁面上展示，不寫入任何結構化資料，
+ * 因此這裡刻意沒有 aggregateRating / review 節點。
+ */
+const attractionId = `${site.url}/#attraction`;
+const websiteId = `${site.url}/#website`;
+const webpageId = `${site.url}/#webpage`;
+const organizationId = `${site.url}/#organization`;
+const lastmod = new Date().toISOString().slice(0, 10);
 
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: 'JimmyPark.org',
+      url: site.url,
+      description:
+        '獨立製作的非營利旅遊科普網站，與幾米品牌、宜蘭縣政府及各景點營運單位沒有隸屬或授權關係。',
+      publishingPrinciples: `${site.url}/privacy`,
+      ownershipFundingInfo: '本站為獨立製作、非營利，未接受任何景點、商家或官方單位贊助。',
+      sameAs: [attraction.officialWorkUrl],
+    },
+    {
       '@type': 'WebSite',
-      '@id': `${site.url}/#website`,
+      '@id': websiteId,
       url: site.url,
       name: 'JimmyPark.org',
       inLanguage: 'zh-Hant-TW',
+      publisher: { '@id': organizationId },
     },
     {
       '@type': 'WebPage',
-      '@id': `${site.url}/#webpage`,
+      '@id': webpageId,
       url: `${site.url}/`,
-      name: '宜蘭幾米公園攻略｜交通、拍照與散步路線',
-      description: site.description,
-      isPartOf: { '@id': `${site.url}/#website` },
-      about: { '@id': `${site.url}/#attraction` },
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { '@id': websiteId },
+      about: { '@id': attractionId },
       inLanguage: 'zh-Hant-TW',
+      dateModified: lastmod,
       primaryImageOfPage: {
         '@type': 'ImageObject',
-        url: `${site.url}/images/og-jimmypark.jpg`,
+        url: `${site.url}${seo.image}`,
         width: 1200,
         height: 630,
       },
     },
     {
       '@type': 'TouristAttraction',
-      '@id': `${site.url}/#attraction`,
-      name: '幾米主題廣場（幾米公園）',
-      alternateName: ['幾米廣場', '宜蘭幾米公園'],
-      description:
-        '位於宜蘭火車站旁的戶外公共藝術空間，結合舊鐵路宿舍、城市景觀與繪本主題裝置。',
+      '@id': attractionId,
+      name: attraction.fullName,
+      alternateName: attraction.alternateNames,
+      description: seo.description,
+      url: site.url,
       image: [
         `${site.url}/images/hero-1440.webp`,
         `${site.url}/images/plaza-walkway-1440.webp`,
         `${site.url}/images/forest-train-1440.webp`,
       ],
+      isAccessibleForFree: true,
+      publicAccess: true,
+      telephone: attraction.telephone,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: '宜興路一段 240 號一帶',
-        addressLocality: '宜蘭市',
-        addressRegion: '宜蘭縣',
-        postalCode: '260',
-        addressCountry: 'TW',
+        streetAddress: attraction.streetAddressShort,
+        addressLocality: attraction.cityName,
+        addressRegion: attraction.stateProvince,
+        postalCode: attraction.postalCode,
+        addressCountry: attraction.countryCode,
       },
       geo: {
         '@type': 'GeoCoordinates',
-        latitude: site.latitude,
-        longitude: site.longitude,
+        latitude: attraction.latitude,
+        longitude: attraction.longitude,
       },
-      isAccessibleForFree: true,
-      publicAccess: true,
-      openingHours: 'Mo-Su 00:00-23:59',
+      hasMap: attraction.mapsShareUrl,
+      sameAs: [
+        attraction.mapsShareUrl,
+        attraction.govtTourismUrl,
+        attraction.officialWorkUrl,
+      ],
+      containedInPlace: {
+        '@type': 'AdministrativeArea',
+        name: `${attraction.stateProvince}${attraction.cityName}`,
+      },
+      openingHoursSpecification: [
+        {
+          '@type': 'OpeningHoursSpecification',
+          dayOfWeek: [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday',
+          ],
+          opens: '00:00',
+          closes: '23:59',
+        },
+      ],
+      amenityFeature: [
+        { '@type': 'LocationFeatureSpecification', name: '免費參觀', value: true },
+        { '@type': 'LocationFeatureSpecification', name: '戶外開放空間', value: true },
+        { '@type': 'LocationFeatureSpecification', name: '主要動線平緩好走', value: true },
+      ],
       touristType: ['親子旅客', '情侶', '攝影愛好者', '鐵道旅客'],
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${site.url}/#breadcrumb`,
+      itemListElement: attraction.breadcrumb.map((name, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name,
+        item: index === 0 ? `${site.url}/` : undefined,
+      })),
     },
   ],
 };
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${site.url}/#faq`,
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
 ---
 
-<BaseLayout>
+<BaseLayout title={seo.title} description={seo.description} image={seo.image}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
   <header class="storybook-nav fixed inset-x-0 top-0 z-50 border-b border-forest/10 bg-[#fff9ec]/90 backdrop-blur-xl">
     <div class="container-shell flex h-[4.5rem] items-center justify-between gap-4">
@@ -88,12 +182,13 @@ const schema = {
         </span>
       </a>
 
-      <nav class="hidden items-center gap-5 text-sm font-medium text-ink/70 lg:flex" aria-label="主要導覽">
+      <nav class="hidden items-center gap-4 text-sm font-medium text-ink/70 lg:flex" aria-label="主要導覽">
         <a class="transition hover:text-forest" href="#overview">行前速覽</a>
+        <a class="transition hover:text-forest" href="#weather">即時天氣</a>
         <a class="transition hover:text-forest" href="#route">散步路線</a>
         <a class="transition hover:text-forest" href="#highlights">必看景點</a>
-        <a class="transition hover:text-forest" href="/food">附近美食</a>
         <a class="transition hover:text-forest" href="#transport">交通停車</a>
+        <a class="transition hover:text-forest" href="#facilities">周邊設施</a>
         <a class="transition hover:text-forest" href="#faq">常見問題</a>
         <a class="font-bold text-coral transition hover:text-forest" href="/postcard">製作紀念卡</a>
       </nav>
@@ -117,10 +212,16 @@ const schema = {
     <nav id="mobile-nav" hidden class="border-t border-forest/10 bg-[#fff9ec] px-4 py-4 lg:hidden" aria-label="行動版導覽">
       <div class="container-shell grid grid-cols-2 gap-2 text-sm font-semibold">
         <a class="rounded-xl bg-white/70 px-4 py-3" href="#overview">行前速覽</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#weather">即時天氣</a>
         <a class="rounded-xl bg-white/70 px-4 py-3" href="#route">散步路線</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#recommended-routes">推薦行程</a>
         <a class="rounded-xl bg-white/70 px-4 py-3" href="#highlights">必看景點</a>
-        <a class="rounded-xl bg-white/70 px-4 py-3" href="/food">附近美食</a>
         <a class="rounded-xl bg-white/70 px-4 py-3" href="#transport">交通停車</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#facilities">周邊設施</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#history">景點故事</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#reviews">旅客評價</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="/food">附近美食</a>
+        <a class="rounded-xl bg-white/70 px-4 py-3" href="#faq">常見問題</a>
         <a class="rounded-xl bg-sun/45 px-4 py-3 text-forest-dark" href="/postcard">製作紀念卡</a>
       </div>
     </nav>
@@ -131,7 +232,7 @@ const schema = {
       <div class="absolute inset-0">
         <Picture
           name="hero"
-          alt="宜蘭火車站繪本風格外觀與長頸鹿裝置"
+          alt="幾米主題廣場（幾米公園）主視覺：臺灣宜蘭市宜蘭火車站繪本風格外觀與長頸鹿裝置"
           class="storybook-hero-image h-full w-full object-cover object-center"
           loading="eager"
           fetchpriority="high"
@@ -158,8 +259,11 @@ const schema = {
             <span class="rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm backdrop-blur">免費戶外景點</span>
           </div>
           <p class="mb-4 text-sm font-bold tracking-[0.25em] text-[#f5d982]">從車站，走進一段繪本風景</p>
-          <h1 class="max-w-3xl text-5xl leading-[1.08] font-bold tracking-tight sm:text-6xl lg:text-8xl">
+          <h1 class="max-w-3xl text-5xl leading-[1.08] font-bold tracking-tight sm:text-6xl lg:text-7xl">
             宜蘭幾米公園
+            <span class="mt-4 block text-xl leading-snug font-bold text-white/85 sm:text-2xl">
+              幾米主題廣場｜宜蘭市・宜蘭縣・臺灣
+            </span>
           </h1>
           <p class="mt-6 max-w-2xl text-lg leading-8 text-white/80 sm:text-xl">
             一條不用趕路的站前散步：從宜蘭火車站、丟丟噹森林，到幾米主題廣場與幸福轉運站，用 30 到 60 分鐘收進宜蘭最有故事感的城市風景。
@@ -188,6 +292,23 @@ const schema = {
 
     <section id="overview" class="storybook-overview relative -mt-1 bg-paper py-10 lg:py-14">
       <div class="container-shell">
+        <nav aria-label="景點層級" class="mb-6 flex justify-center">
+          <ol class="flex flex-wrap items-center justify-center gap-2 text-sm text-ink/60">
+            {
+              attraction.breadcrumb.map((name, index) => (
+                <li class="flex items-center gap-2">
+                  {index > 0 && <span class="text-forest/40" aria-hidden="true">→</span>}
+                  <span class:list={[index === 0 && 'font-bold text-forest-dark']}>{name}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+
+        <p class="mx-auto mb-9 max-w-3xl text-center text-base leading-8 text-ink/72">
+          {entityStatement}
+        </p>
+
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {quickFacts.map((fact) => (
             <article class="storybook-fact card-soft rounded-3xl p-6">
@@ -271,7 +392,7 @@ const schema = {
     <section class="storybook-section storybook-section-cream section-pad overflow-hidden bg-[#fffdf7]">
       <div class="container-shell grid items-center gap-12 lg:grid-cols-[.9fr_1.1fr] lg:gap-20">
         <div>
-          <p class="section-kicker">先知道這件事</p>
+          <p class="section-kicker">關於幾米主題廣場</p>
           <h2 class="mt-5 text-4xl leading-tight font-bold tracking-tight text-forest-dark sm:text-5xl">
             它不是大型主題樂園，<br />而是一段城市散步。
           </h2>
@@ -361,6 +482,10 @@ const schema = {
       </div>
     </section>
 
+    <RecommendedRoutes />
+
+    <AudiencePlans />
+
     <section id="highlights" class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]">
       <div class="container-shell">
         <div class="max-w-3xl">
@@ -394,8 +519,16 @@ const schema = {
             </article>
           ))}
         </div>
+
+        <p class="mt-10 text-xs leading-6 text-ink/60">
+          以上實景照片皆為實拍照片，依各自的 Creative Commons 授權條款使用，並已進行尺寸調整、裁切與 WebP 轉檔；版權歸原作者所有，完整授權清單請見頁尾「隱私與授權摘要」。
+        </p>
       </div>
     </section>
+
+    <WeatherPanel />
+
+    <SeasonTable />
 
     <section class="storybook-night relative overflow-hidden bg-forest py-16 text-white lg:py-20">
       <div class="absolute inset-0 opacity-15 paper-grid"></div>
@@ -423,9 +556,11 @@ const schema = {
       <div class="container-shell">
         <div class="grid gap-12 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
           <div>
-            <p class="section-kicker">怎麼抵達</p>
-            <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">搭火車最輕鬆，開車則要預留找車位時間</h2>
-            <p class="mt-6 text-lg leading-8 text-ink/65">核心景點就在宜蘭火車站旁，沒有必要為了這一站特別租車。若安排宜蘭郊區行程，再選擇自駕會比較合理。</p>
+            <p class="section-kicker">位置與參觀方式</p>
+            <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+              幾米公園在宜蘭市怎麼去
+            </h2>
+            <p class="mt-6 text-lg leading-8 text-ink/65">搭火車最輕鬆：核心景點就在宜蘭火車站旁，沒有必要為了這一站特別租車。若安排宜蘭郊區行程，再選擇自駕會比較合理。</p>
           </div>
 
           <div class="grid gap-4">
@@ -436,7 +571,7 @@ const schema = {
                 </span>
                 <div>
                   <h3 class="text-xl font-bold text-forest-dark">台鐵｜最推薦</h3>
-                  <p class="mt-2 leading-7 text-ink/65">搭乘火車至宜蘭站，由前站出站，往車站南側步行約 3 分鐘即可抵達主要裝置區。</p>
+                  <p class="mt-2 leading-7 text-ink/65">搭乘火車至宜蘭站，由前站出站後往車站南側步行，約 1–3 分鐘即可抵達主要裝置區，是幾米公園最方便的交通方式。</p>
                 </div>
               </div>
             </article>
@@ -498,6 +633,39 @@ const schema = {
       </div>
     </section>
 
+    <section
+      id="landmarks"
+      class="storybook-section storybook-section-sky section-pad paper-grid border-y border-forest/10 bg-paper"
+      aria-labelledby="landmarks-title"
+    >
+      <div class="container-shell">
+        <div class="max-w-3xl">
+          <p class="section-kicker">周邊地標與景點</p>
+          <h2 id="landmarks-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+            幾米公園周邊可以一起走的地標
+          </h2>
+          <p class="mt-5 text-lg leading-8 text-ink/65">{nearbyClusterStatement}</p>
+        </div>
+
+        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            landmarks.map((item) => (
+              <article class="card-soft flex h-full flex-col p-6">
+                <p class="text-xs font-bold tracking-[0.14em] text-forest/70">{item.type}</p>
+                <h3 class="mt-2 text-xl font-bold text-forest-dark">{item.name}</h3>
+                <p class="mt-2 text-sm font-bold text-coral">步行 {item.walk}</p>
+                <p class="mt-3 text-sm leading-7 text-ink/65">{item.text}</p>
+              </article>
+            ))
+          }
+        </div>
+
+        <p class="mt-8 text-xs leading-6 text-ink/60">
+          步行時間為約略估算，僅供行程安排參考；各館舍的開放時間、休館日與入館規則請以官方公告為準。
+        </p>
+      </div>
+    </section>
+
     <section class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]">
       <div class="container-shell grid gap-12 lg:grid-cols-2 lg:gap-20">
         <div>
@@ -511,11 +679,19 @@ const schema = {
       </div>
     </section>
 
+    <HistoryStory />
+
+    <FacilityGrid />
+
+    <RatingPanel />
+
+    <StewardshipSection />
+
     <section id="faq" class="storybook-section storybook-section-sky section-pad border-t border-forest/10 bg-paper">
       <div class="container-shell grid gap-12 lg:grid-cols-[.65fr_1.35fr] lg:gap-20">
         <div>
           <p class="section-kicker">常見問題</p>
-          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">出發前，快速確認</h2>
+          <h2 class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">幾米公園常見問題：門票、開放時間、交通與周邊景點</h2>
         </div>
         <div class="divide-y divide-forest/10 border-y border-forest/10">
           {faqs.map((item) => (
@@ -530,6 +706,8 @@ const schema = {
         </div>
       </div>
     </section>
+
+    <SourcesSection />
 
     <section class="storybook-cta-wrap bg-sun px-4 py-16 sm:py-20">
       <div class="storybook-cta container-shell rounded-[2rem] bg-forest-dark px-6 py-12 text-center text-white sm:px-12 lg:py-16">
@@ -547,12 +725,69 @@ const schema = {
         <div>
           <p class="text-xl font-bold text-white">JimmyPark.org</p>
           <p class="mt-3 max-w-xl text-sm leading-6">宜蘭幾米公園獨立旅遊指南。內容以行前決策、步行路線與現場禮儀為核心，不提供訂票、登入或商業預約服務。</p>
+          <p class="mt-4 max-w-xl text-sm leading-6">
+            如需官方公告與區域旅遊資訊，請參考
+            <a
+              class="font-bold text-white underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+              href={attraction.govtTourismUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {attraction.govtTourismLabel}
+            </a>
+            與
+            <a
+              class="font-bold text-white underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+              href={attraction.nationalTourismUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {attraction.nationalTourismLabel}
+            </a>。
+          </p>
+
+          <div class="mt-6">
+            <p class="text-xs font-bold tracking-[0.16em] text-white/50">官方資訊來源（出站連結）</p>
+            <ul class="mt-3 grid gap-2 text-sm">
+              <li>
+                <a class="underline decoration-white/25 underline-offset-4 transition hover:text-white" href={attraction.govtTourismUrl} target="_blank" rel="noopener noreferrer">
+                  {attraction.govtTourismLabel}　travel.yilan.gov.tw
+                </a>
+              </li>
+              <li>
+                <a class="underline decoration-white/25 underline-offset-4 transition hover:text-white" href={attraction.nationalTourismUrl} target="_blank" rel="noopener noreferrer">
+                  {attraction.nationalTourismLabel}　taiwan.net.tw
+                </a>
+              </li>
+              <li>
+                <a class="underline decoration-white/25 underline-offset-4 transition hover:text-white" href={attraction.officialWorkUrl} target="_blank" rel="noopener noreferrer">
+                  {attraction.officialWorkLabel}　jimmyspa.com
+                </a>
+              </li>
+              <li>
+                <a class="underline decoration-white/25 underline-offset-4 transition hover:text-white" href={officialAlertSource.url} target="_blank" rel="noopener noreferrer">
+                  {officialAlertSource.name}（氣象警特報）　cwa.gov.tw
+                </a>
+              </li>
+              <li>
+                <a class="underline decoration-white/25 underline-offset-4 transition hover:text-white" href={attraction.mapsShareUrl} target="_blank" rel="noopener noreferrer">
+                  Google 地圖・幾米公園景點頁
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="grid gap-3 text-sm sm:grid-cols-2">
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#weather">即時天氣</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#seasons">季度策略</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#recommended-routes">推薦行程</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/route">散步路線</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/photo-guide">拍照指南</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/food">附近美食</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#transport">交通停車</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#facilities">周邊設施</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#history">景點故事</a>
+          <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#reviews">旅客評價</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="#faq">常見問題</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/postcard">製作紀念卡</a>
           <a class="rounded-xl border border-white/10 px-4 py-3 transition hover:bg-white/5" href="/privacy">隱私與聲明</a>
@@ -580,6 +815,10 @@ const schema = {
           <p><a class="font-bold text-white underline decoration-white/30 underline-offset-4 hover:decoration-white" href="/privacy">閱讀完整隱私與聲明</a></p>
         </div>
       </details>
+
+      <p class="mt-6 text-xs leading-6 text-white/50">
+        頁面實景照片均為實拍照片，依各自的 Creative Commons 授權條款使用，並已進行尺寸調整、裁切與 WebP 轉檔；版權歸原作者所有，未經授權請勿另行轉載商用。
+      </p>
 
       <div class="mt-8 flex flex-col justify-between gap-3 text-xs text-white/45 sm:flex-row">
         <p>© JimmyPark.org</p>

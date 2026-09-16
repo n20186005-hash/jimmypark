@@ -1,6 +1,58 @@
+# ------------------------------------------------------------
+# JimmyPark.org｜手動部署至 Cloudflare Workers（Wrangler）
+# 部署流程：pnpm build → 產生 dist/ → wrangler deploy
+# 因此 dist/ 為本機建置產物，不需要進版控。
+# ------------------------------------------------------------
+
+# 依賴
 node_modules/
+.pnpm-store/
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 建置產物（wrangler assets.directory = ./dist）
 dist/
+.output/
+
+# Astro / Wrangler 產生的暫存與型別
 .astro/
 .wrangler/
+.worker_next/
+.mf/
+worker-configuration.d.ts
+.env
+.env.*
+!.env.example
 .dev.vars
+
+# Cloudflare 帳號與部署紀錄
+.wrangler/
+.deploy*
+.wrangler tmp/
+
+# 測試與覆蓋率
+coverage/
+*.lcov
+
+# 編輯器與系統
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# 作業系統暫存
+ehthumbs.db
+Icon?
+._*
+
+# 本機暫存與壓縮檔
+*.log
+*.tsbuildinfo
+*.zip
+*.tar.gz

@@ -1,22 +1,24 @@
 ---
 import '../styles/global.css';
-import { site } from '../data/site';
+import { attraction, seo, siteVerification } from '../data/attraction';
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   noindex?: boolean;
 }
 
 const {
-  title = '宜蘭幾米公園攻略｜交通、拍照與散步路線',
-  description = site.description,
-  image = '/images/og-jimmypark.jpg',
+  title = seo.title,
+  description = seo.description,
+  image = seo.image,
+  imageAlt = seo.imageAlt,
   noindex = false,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, site.url).toString();
-const absoluteImage = new URL(image, site.url).toString();
+const canonical = new URL(Astro.url.pathname, seo.url).toString();
+const absoluteImage = new URL(image, seo.url).toString();
 ---
 
 <!doctype html>
@@ -29,8 +31,22 @@ const absoluteImage = new URL(image, site.url).toString();
     <meta name="description" content={description} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-Hant-TW" href={canonical} />
+    <link rel="alternate" hreflang="x-default" href={canonical} />
+    {siteVerification.google && <meta name="google-site-verification" content={siteVerification.google} />}
+    {siteVerification.bing && <meta name="msvalidate.01" content={siteVerification.bing} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/site.webmanifest" />
+    <meta name="application-name" content="JimmyPark.org" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="幾米公園" />
+    <meta name="geo.region" content="TW" />
+    <meta name="geo.placename" content={`${attraction.stateProvince}${attraction.cityName}`} />
+    <meta name="geo.position" content={`${attraction.latitude};${attraction.longitude}`} />
+    <meta name="ICBM" content={`${attraction.latitude}, ${attraction.longitude}`} />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_TW" />
     <meta property="og:site_name" content="JimmyPark.org" />
@@ -38,12 +54,14 @@ const absoluteImage = new URL(image, site.url).toString();
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={absoluteImage} />
+    <meta property="og:image:alt" content={imageAlt} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={absoluteImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <title>{title}</title>
 
     <!-- Google Analytics 4 -->
@@ -58,5 +76,16 @@ const absoluteImage = new URL(image, site.url).toString();
   <body>
     <a class="skip-link" href="#main-content">跳至主要內容</a>
     <slot />
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js', { scope: '/' })
+            .catch(() => {
+              /* 註冊失敗不影響瀏覽 */
+            });
+        });
+      }
+    </script>
   </body>
 </html>

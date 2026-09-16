@@ -1,0 +1,86 @@
+---
+import { seasonStrategies, seasonSummary } from '../data/seasons';
+---
+
+<section
+  id="seasons"
+  class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]"
+  aria-labelledby="seasons-title"
+>
+  <div class="container-shell">
+    <div class="max-w-3xl">
+      <p class="section-kicker">季度遊覽策略</p>
+      <h2 id="seasons-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        氣象 × 環境 × 生態：四季該怎麼安排這趟散步
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        以下為依交通部中央氣象署長期氣候平均（約 1991–2020 年）整理的綜合分析，用來決定「什麼季節適合來、該帶什麼」，不是即時預報。
+      </p>
+    </div>
+
+    <div class="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        seasonSummary.map((item) => (
+          <div class="card-soft px-5 py-4">
+            <p class="text-xs font-bold tracking-[0.14em] text-forest/70">{item.label}</p>
+            <p class="mt-2 text-sm font-bold leading-6 text-forest-dark">{item.value}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="storybook-map-card mt-10 overflow-x-auto bg-[#fffdf7]">
+      <table class="w-full min-w-[62rem] border-collapse text-left text-sm">
+        <caption class="sr-only">幾米公園四季遊覽策略：氣候、環境、生態觀察、裝備與策略</caption>
+        <thead>
+          <tr class="bg-forest text-white">
+            <th scope="col" class="px-5 py-4 font-bold">季節／月份</th>
+            <th scope="col" class="px-5 py-4 font-bold">氣候概況</th>
+            <th scope="col" class="px-5 py-4 font-bold">環境與現場條件</th>
+            <th scope="col" class="px-5 py-4 font-bold">生態與觀察</th>
+            <th scope="col" class="px-5 py-4 font-bold">裝備</th>
+            <th scope="col" class="px-5 py-4 font-bold">遊覽策略</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            seasonStrategies.map((season) => (
+              <tr class="border-t border-forest/12 align-top odd:bg-white/60">
+                <th scope="row" class="px-5 py-5">
+                  <span class="inline-flex items-center gap-2">
+                    <span class="size-3 rounded-full" style={`background:${season.accent}`} aria-hidden="true"></span>
+                    <span class="text-base font-bold text-forest-dark">{season.season}</span>
+                  </span>
+                  <span class="mt-1 block text-sm font-normal text-ink/60">{season.months}</span>
+                  <span class="mt-2 inline-block rounded-full bg-sun/25 px-2.5 py-1 text-xs font-bold text-[#8a6212]">
+                    適合度：{season.score}
+                  </span>
+                </th>
+                <td class="px-5 py-5 leading-6 text-ink/70">
+                  <p class="font-bold text-forest-dark">{season.temp}</p>
+                  <p class="mt-1 text-ink/60">降雨日數 {season.rainDays}</p>
+                  <p class="mt-2">{season.climate}</p>
+                </td>
+                <td class="px-5 py-5 leading-6 text-ink/70">{season.environment}</td>
+                <td class="px-5 py-5 leading-6 text-ink/70">{season.nature}</td>
+                <td class="px-5 py-5 leading-6 text-ink/70">{season.gear}</td>
+                <td class="px-5 py-5 leading-6 text-ink/70">
+                  <p>{season.strategy}</p>
+                  {season.caution && (
+                    <p class="mt-3 rounded-xl bg-coral/10 px-3 py-2 text-xs leading-5 text-[#a4523e]">
+                      注意：{season.caution}
+                    </p>
+                  )}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-6 text-xs leading-6 text-ink/60">
+      表內氣溫與降雨日數為長期氣候平均的概略區間，僅供行程規劃參考；實際天氣請參考本頁即時天氣與交通部中央氣象署發布的最新預報與警特報。
+    </p>
+  </div>
+</section>

@@ -1,0 +1,141 @@
+---
+import { recommendedRoutes } from '../data/recommendedRoutes';
+---
+
+<section
+  id="recommended-routes"
+  class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]"
+  aria-labelledby="recommended-routes-title"
+>
+  <div class="container-shell">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="section-kicker justify-center">推薦通用路線</p>
+      <h2 id="recommended-routes-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        半日或全日，都從車站開始
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        兩條通用行程都以幾米公園為起點，往宜蘭舊城延伸；全程可行走，不需要開車。
+      </p>
+    </div>
+
+    <div class="mx-auto mt-10 flex max-w-md rounded-full border border-forest/15 bg-white/70 p-1.5" role="tablist" aria-label="推薦行程長度">
+      {
+        recommendedRoutes.map((route, index) => (
+          <button
+            type="button"
+            class="route-button flex-1 rounded-full border border-transparent px-3 py-3 text-sm font-bold text-forest transition"
+            role="tab"
+            aria-selected={index === 0 ? 'true' : 'false'}
+            tabindex={index === 0 ? 0 : -1}
+            aria-controls={`plan-panel-${route.id}`}
+            id={`plan-tab-${route.id}`}
+            data-plan={route.id}
+          >
+            {route.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="mt-10">
+      {
+        recommendedRoutes.map((route, index) => (
+          <article
+            id={`plan-panel-${route.id}`}
+            role="tabpanel"
+            aria-labelledby={`plan-tab-${route.id}`}
+            hidden={index !== 0}
+            data-plan-panel={route.id}
+            class="card-soft p-6 sm:p-9 lg:p-12"
+          >
+            <div class="flex flex-wrap items-start justify-between gap-6">
+              <div>
+                <span
+                  class="inline-flex rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.12em] text-white"
+                  style={`background:${route.accent}`}
+                >
+                  {route.label}行程
+                </span>
+                <h3 class="mt-4 text-3xl font-bold text-forest-dark">{route.title}</h3>
+                <p class="mt-4 max-w-2xl leading-7 text-ink/65">{route.summary}</p>
+              </div>
+              <dl class="grid gap-3 text-sm sm:grid-cols-3 lg:grid-cols-1">
+                <div class="rounded-2xl bg-white/75 px-5 py-4">
+                  <dt class="text-ink/55">時間</dt>
+                  <dd class="mt-1 font-bold text-forest-dark">{route.duration}</dd>
+                </div>
+                <div class="rounded-2xl bg-white/75 px-5 py-4">
+                  <dt class="text-ink/55">距離</dt>
+                  <dd class="mt-1 font-bold text-forest-dark">{route.distance}</dd>
+                </div>
+                <div class="rounded-2xl bg-white/75 px-5 py-4">
+                  <dt class="text-ink/55">適合</dt>
+                  <dd class="mt-1 font-bold text-forest-dark">{route.suitable}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <ol class="mt-9 grid gap-3">
+              {route.blocks.map((block, blockIndex) => (
+                <li class="grid gap-2 rounded-2xl bg-white/70 p-5 sm:grid-cols-[8.5rem_1fr] sm:gap-6">
+                  <div>
+                    <span class="grid size-8 place-items-center rounded-full bg-forest text-sm font-bold text-white">
+                      {blockIndex + 1}
+                    </span>
+                    <p class="mt-2 text-sm font-bold text-forest-dark">{block.period}</p>
+                  </div>
+                  <div>
+                    <p class="font-bold text-forest-dark">{block.area}</p>
+                    <p class="mt-2 text-sm leading-6 text-ink/65">{block.detail}</p>
+                    {block.note && (
+                      <p class="mt-2 text-xs leading-5 text-coral">{block.note}</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+
+            <p class="mt-6 rounded-2xl bg-sun/20 p-5 text-sm leading-6 text-[#7a5610]">
+              <strong>雨天備案：</strong>{route.backup}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  const planButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-plan]'));
+  const planPanels = Array.from(document.querySelectorAll<HTMLElement>('[data-plan-panel]'));
+
+  const selectPlan = (button: HTMLButtonElement) => {
+    const planId = button.dataset.plan;
+    planButtons.forEach((item) => {
+      const isActive = item === button;
+      item.setAttribute('aria-selected', String(isActive));
+      item.tabIndex = isActive ? 0 : -1;
+    });
+    planPanels.forEach((panel) => {
+      panel.hidden = panel.dataset.planPanel !== planId;
+    });
+  };
+
+  planButtons.forEach((button, index) => {
+    button.addEventListener('click', () => selectPlan(button));
+    button.addEventListener('keydown', (event) => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === 'ArrowLeft') nextIndex = (index - 1 + planButtons.length) % planButtons.length;
+      if (event.key === 'ArrowRight') nextIndex = (index + 1) % planButtons.length;
+      if (event.key === 'Home') nextIndex = 0;
+      if (event.key === 'End') nextIndex = planButtons.length - 1;
+      const nextButton = planButtons[nextIndex];
+      if (nextButton) {
+        selectPlan(nextButton);
+        nextButton.focus();
+      }
+    });
+  });
+</script>

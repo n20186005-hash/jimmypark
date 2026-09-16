@@ -1,0 +1,140 @@
+---
+import { ratingSource, mapListing, visitNotes } from '../data/reviews';
+import { attraction } from '../data/attraction';
+
+const { rating, ratingScale, ratingCount, syncedAt, reviewUrl, mapUrl } = ratingSource;
+const percent = (rating / ratingScale) * 100;
+const countLabel = ratingCount.toLocaleString('zh-TW');
+
+const stars = Array.from({ length: ratingScale }, (_, index) => index);
+---
+
+<section
+  id="reviews"
+  class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]"
+  aria-labelledby="reviews-title"
+>
+  <div class="container-shell">
+    <div class="max-w-3xl">
+      <p class="section-kicker">旅客評價</p>
+      <h2 id="reviews-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        {attraction.shortName}的 Google 地圖評分與評價
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        下面只呈現 Google 地圖公開的評分與評價數量，並標示來源與同步時間；逐字評價內容請回到 Google 地圖查看。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-[.9fr_1.1fr]">
+      <article class="card-soft p-7 sm:p-9">
+        <div class="flex items-end gap-5">
+          <p class="text-7xl font-bold leading-none text-forest-dark">{rating.toFixed(1)}</p>
+          <div class="pb-1">
+            <div class="relative inline-flex" role="img" aria-label={`Google 地圖評分 ${rating} 分，滿分 ${ratingScale} 分`}>
+              <span class="flex gap-1 text-forest/20">
+                {
+                  stars.map(() => (
+                    <svg viewBox="0 0 24 24" class="size-6" aria-hidden="true">
+                      <path
+                        d="m12 3 2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8L12 3Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  ))
+                }
+              </span>
+              <span
+                class="absolute inset-0 flex gap-1 overflow-hidden text-sun"
+                style={`width: ${percent}%`}
+                aria-hidden="true"
+              >
+                {
+                  stars.map(() => (
+                    <svg viewBox="0 0 24 24" class="size-6 shrink-0" aria-hidden="true">
+                      <path
+                        d="m12 3 2.7 5.7 6.3.8-4.6 4.3 1.2 6.2L12 17l-5.6 3 1.2-6.2L3 9.5l6.3-.8L12 3Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  ))
+                }
+              </span>
+            </div>
+            <p class="mt-2 text-sm font-bold text-forest-dark">
+              共 {countLabel} 則 Google 地圖評價
+            </p>
+          </div>
+        </div>
+
+        <a
+          href={reviewUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mt-4 block text-xs leading-6 text-ink/60 underline decoration-forest/20 underline-offset-4 transition hover:text-forest"
+        >
+          {ratingSource.inlineNote}
+        </a>
+
+        <dl class="mt-7 grid gap-4 border-t border-forest/10 pt-7 text-sm sm:grid-cols-2">
+          {
+            mapListing.map((item) => (
+              <div>
+                <dt class="text-ink/55">{item.label}</dt>
+                <dd class="mt-1 leading-6 font-bold text-forest-dark">{item.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        <p class="mt-6 text-xs leading-6 text-ink/55">{ratingSource.blockNote}</p>
+        <p class="mt-2 text-xs leading-6 text-ink/55">{ratingSource.excerptNote}</p>
+
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a
+            href={reviewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3.5 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-forest-dark"
+          >
+            {ratingSource.ctaLabel}
+            <svg viewBox="0 0 24 24" class="size-4" aria-hidden="true">
+              <path d="M8 5h11v11M19 5 8 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <a
+            href={mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 rounded-full border border-forest/20 px-6 py-3.5 text-sm font-bold text-forest transition hover:border-forest/45 hover:bg-forest/5"
+          >
+            在 Google 地圖開啟導航
+          </a>
+        </div>
+      </article>
+
+      <div class="grid gap-4">
+        <div class="card-soft p-7 sm:p-9">
+          <p class="text-xs font-bold tracking-[0.18em] text-coral">本站整理</p>
+          <h3 class="mt-3 text-2xl font-bold text-forest-dark">造訪前可以先知道的四件事</h3>
+          <p class="mt-3 text-sm leading-6 text-ink/60">
+            以下為本站依景點特性整理的規劃提醒，不代表任何個別旅客的評價。
+          </p>
+          <dl class="mt-6 grid gap-5">
+            {
+              visitNotes.map((note) => (
+                <div class="rounded-2xl bg-white/75 p-5">
+                  <dt class="text-sm font-bold text-forest">{note.label}</dt>
+                  <dd class="mt-2 text-sm leading-6 text-ink/65">{note.text}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <p class="rounded-2xl border border-forest/15 bg-white/70 p-5 text-xs leading-6 text-ink/60">
+          評分與評價數同步自 Google 地圖（Google Maps）用戶評價・同步時間 {syncedAt}；版權歸原作者與 Google 地圖所有。本站僅於頁面呈現，未將評價寫入任何結構化資料。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

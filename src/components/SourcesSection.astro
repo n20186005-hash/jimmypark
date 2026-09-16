@@ -1,0 +1,93 @@
+---
+import { sources, photoSource, sourceDisclaimer } from '../data/sources';
+
+const grouped = sources.reduce<Record<string, typeof sources>>((acc, item) => {
+  (acc[item.category] ??= []).push(item);
+  return acc;
+}, {});
+
+const order = ['官方旅遊', '作品與空間', '天氣', '交通', '評價'];
+const categories = [
+  ...order.filter((key) => grouped[key]),
+  ...Object.keys(grouped).filter((key) => !order.includes(key)),
+];
+---
+
+<section
+  id="sources"
+  class="storybook-section storybook-section-cream section-pad bg-[#fffdf7]"
+  aria-labelledby="sources-title"
+>
+  <div class="container-shell">
+    <div class="max-w-3xl">
+      <p class="section-kicker">資料來源</p>
+      <h2 id="sources-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        這頁內容從哪裡來
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        本站為非營利獨立科普網站。每一類資訊都標明出處與性質，方便你自行查證，也避免單一來源造成的誤差。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-2">
+      {
+        categories.map((category) => (
+          <article class="card-soft p-6 sm:p-8">
+            <p class="text-xs font-bold tracking-[0.18em] text-coral">{category}</p>
+            <ul class="mt-5 space-y-5">
+              {grouped[category].map((item) => (
+                <li class="border-l-2 border-forest/15 pl-4">
+                  <p class="font-bold text-forest-dark">{item.label}</p>
+                  <p class="mt-2 text-sm leading-6 text-ink/68">{item.detail}</p>
+                  <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/55">
+                    {item.updated && <span>更新頻率：{item.updated}</span>}
+                    {item.url && (
+                      <a
+                        class="font-bold text-forest underline decoration-forest/25 underline-offset-4 transition hover:decoration-forest"
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item.urlLabel ?? item.url} ↗
+                      </a>
+                    )}
+                  </div>
+                  {item.note && <p class="mt-2 text-xs leading-5 text-ink/55">{item.note}</p>}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+
+      <article class="card-soft p-6 sm:p-8">
+        <p class="text-xs font-bold tracking-[0.18em] text-coral">{photoSource.category}</p>
+        <p class="mt-4 font-bold text-forest-dark">{photoSource.label}</p>
+        <p class="mt-2 text-sm leading-6 text-ink/68">{photoSource.detail}</p>
+        <ul class="mt-5 space-y-2 text-sm">
+          {
+            photoSource.items.map((item) => (
+              <li>
+                <a
+                  class="text-forest underline decoration-forest/25 underline-offset-4 transition hover:decoration-forest"
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {item.label} ↗
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
+
+    <div class="mt-10 rounded-[2rem] border border-forest/15 bg-white/70 p-7 sm:p-9">
+      <p class="text-xs font-bold tracking-[0.18em] text-forest/70">更新與免責</p>
+      <ul class="mt-4 space-y-3 text-sm leading-7 text-ink/68">
+        {sourceDisclaimer.map((line) => <li>{line}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>

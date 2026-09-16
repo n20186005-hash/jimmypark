@@ -1,0 +1,77 @@
+---
+import { audiencePlans } from '../data/audience';
+---
+
+<section
+  id="plans"
+  class="storybook-section storybook-section-sky section-pad border-y border-forest/10 bg-paper"
+  aria-labelledby="plans-title"
+>
+  <div class="container-shell">
+    <div class="mx-auto max-w-3xl text-center">
+      <p class="section-kicker justify-center">按人群定制</p>
+      <h2 id="plans-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        三種人，三種走法
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        依照同行的人是誰、體力到哪裡，選擇最適合的節奏。三條路線都以「隨時能停、隨時能折返」為前提。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      {
+        audiencePlans.map((plan) => (
+          <article class="card-soft flex h-full flex-col p-7">
+            <span
+              class="inline-flex w-fit rounded-full px-3 py-1.5 text-xs font-bold tracking-[0.14em] text-white"
+              style={`background:${plan.accent}`}
+            >
+              {plan.name}
+            </span>
+            <h3 class="mt-4 text-2xl font-bold text-forest-dark">{plan.tagline}</h3>
+            <dl class="mt-5 grid grid-cols-2 gap-3 text-sm">
+              <div class="rounded-2xl bg-white/70 p-4">
+                <dt class="text-ink/55">建議時長</dt>
+                <dd class="mt-1 font-bold text-forest-dark">{plan.duration}</dd>
+              </div>
+              <div class="rounded-2xl bg-white/70 p-4">
+                <dt class="text-ink/55">最佳時段</dt>
+                <dd class="mt-1 font-bold text-forest-dark">{plan.bestTime}</dd>
+              </div>
+            </dl>
+            <p class="mt-4 text-sm leading-6 text-ink/65">節奏：{plan.rhythm}</p>
+
+            <ol class="mt-6 space-y-4 border-t border-forest/10 pt-6">
+              {plan.stops.map((stop) => (
+                <li class="relative pl-6">
+                  <span
+                    class="absolute left-0 top-1.5 size-2.5 rounded-full"
+                    style={`background:${plan.accent}`}
+                    aria-hidden="true"
+                  ></span>
+                  <span class="absolute left-[0.3rem] top-5 h-[calc(100%-0.5rem)] w-px bg-forest/12" aria-hidden="true"></span>
+                  <p class="text-xs font-bold tracking-[0.1em] text-forest/70">{stop.time}</p>
+                  <p class="mt-1 font-bold text-forest-dark">{stop.place}</p>
+                  <p class="mt-1 text-sm leading-6 text-ink/65">{stop.action}</p>
+                </li>
+              ))}
+            </ol>
+
+            <ul class="mt-6 space-y-2 border-t border-forest/10 pt-6 text-sm leading-6 text-ink/65">
+              {plan.focus.map((item) => (
+                <li class="flex gap-2">
+                  <span class="mt-2 size-1.5 shrink-0 rounded-full bg-forest/45" aria-hidden="true"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p class="mt-6 rounded-2xl bg-coral/10 p-4 text-xs leading-6 text-[#a4523e]">
+              {plan.caution}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

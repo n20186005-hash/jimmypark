@@ -1,0 +1,99 @@
+---
+import { facilities, facilityStatusLabel, type Facility } from '../data/facilities';
+
+const iconPaths: Record<Facility['icon'], string> = {
+  restroom:
+    'M7 4h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM9 4V2.5h6V4M9.5 11h1.2M13.3 11h1.2M9.5 15.5h1.2M13.3 15.5h1.2',
+  parking:
+    'M6 4h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM10 17V8h3a2.5 2.5 0 0 1 0 5h-3',
+  dining:
+    'M7 3v8a2 2 0 0 0 2 2v8M7 3v8M15 3c2 1.6 3 3.6 3 6.5 0 2-1 3.4-1.5 3.5V21M15 3v10',
+  lodging:
+    'M4 20V7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v13M4 17h16M8 10h3a1.5 1.5 0 0 1 1.5 1.5v3H8v-3A1.5 1.5 0 0 1 8 10Z',
+  store:
+    'M4 9h16l-1.2 11H5.2L4 9Zm3.5 0V6.5a2.5 2.5 0 0 1 5 0V9M12.5 9V6.5a2.5 2.5 0 0 1 2.2-2.48M9 13h2M14 13h1',
+  fuel:
+    'M6 20V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v15M4 20h12M14 10h3a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0v-6l-2.5-3M8 8h4',
+  access:
+    'M12 3a1.8 1.8 0 1 1 0 3.6A1.8 1.8 0 0 1 12 3ZM12 7v7h4l2 6M12 13a5 5 0 1 0 0 0Z',
+  medical:
+    'M9 3h6v4h4v6h-4v4H9v-4H5V7h4V3ZM12 17v4M9.5 21h5',
+  luggage:
+    'M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 7h12a1 1 0 0 1 1 1v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1ZM10 11v6M14 11v6',
+  shade:
+    'M4 12h16M12 12v9M6 12l6-7 6 7M9 21h6',
+};
+
+const statusTone: Record<Facility['status'], string> = {
+  available: 'bg-forest/12 text-forest-dark',
+  varies: 'bg-sun/25 text-[#8a6212]',
+  limited: 'bg-coral/12 text-[#a4523e]',
+};
+---
+
+<section
+  id="facilities"
+  class="storybook-section storybook-section-peach section-pad bg-paper"
+  aria-labelledby="facilities-title"
+>
+  <div class="container-shell">
+    <div class="max-w-3xl">
+      <p class="section-kicker">訪客服務與周邊設施</p>
+      <h2 id="facilities-title" class="mt-5 text-4xl font-bold tracking-tight text-forest-dark sm:text-5xl">
+        洗手間、停車、餐飲、住宿與充電：先看類型就好
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-ink/65">
+        本站為非營利科普網站，以下只說明「有哪些類型」與「在哪一帶」，不推薦、不比較任何特定商家。費用與開放時間請以現場標示為準。
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
+      {
+        facilities.map((facility) => (
+          <article class="card-soft flex h-full flex-col p-6 sm:p-7">
+            <div class="flex items-start gap-4">
+              <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-forest text-white">
+                <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d={iconPaths[facility.icon]} />
+                </svg>
+              </span>
+              <div class="min-w-0 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="text-xl font-bold text-forest-dark">{facility.name}</h3>
+                  <span class:list={['rounded-full px-2.5 py-1 text-xs font-bold', statusTone[facility.status]]}>
+                    {facilityStatusLabel[facility.status]}
+                  </span>
+                </div>
+                <p class="mt-1 text-sm font-bold text-forest/80">{facility.type}</p>
+              </div>
+            </div>
+
+            <dl class="mt-5 grid gap-3 text-sm">
+              <div>
+                <dt class="text-ink/55">位置關係</dt>
+                <dd class="mt-1 leading-6 font-bold text-forest-dark">{facility.where}</dd>
+              </div>
+              <div>
+                <dt class="text-ink/55">說明</dt>
+                <dd class="mt-1 leading-7 text-ink/68">{facility.detail}</dd>
+              </div>
+            </dl>
+
+            <ul class="mt-5 space-y-2 border-t border-forest/10 pt-5 text-sm leading-6 text-ink/65">
+              {facility.tips.map((tip) => (
+                <li class="flex gap-2">
+                  <span class="mt-2 size-1.5 shrink-0 rounded-full bg-coral" aria-hidden="true"></span>
+                  <span>{tip}</span>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="mt-8 rounded-2xl border border-forest/15 bg-white/70 p-5 text-sm leading-7 text-ink/65">
+      以上為設施「類型」的中立總覽，非即時狀況查詢。停車費率、充電樁可用性、營業時間與館舍開放日都可能變動，出發前請以現場標示與各單位官方公告為準。
+    </p>
+  </div>
+</section>

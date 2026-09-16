@@ -1,4 +1,16 @@
+# 開放所有搜尋引擎抓取（切勿在這裡封鎖 /_astro/ 或 /images/，
+# 否則 Googlebot 無法載入 CSS / JS / 圖片，會被判定為「已收錄但無法轉譯」）
 User-agent: *
+Allow: /
+
+# 明確放行主要爬蟲，避免被 Cloudflare 規則或預設設定擋下
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://jimmypark.org/sitemap.xml
