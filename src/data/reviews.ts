@@ -18,11 +18,11 @@ export const ratingSource = {
   /** 滿分 */
   ratingScale: 5,
   /** Google 地圖累積評價數 */
-  ratingCount: 16920,
+  ratingCount: 16935,
   /** Google 地圖商家類別 */
   category: attraction.googleCategory,
   /** 同步時間（人工核對 Google 地圖資料的時間） */
-  syncedAt: '2026 年 9 月',
+  syncedAt: '2026 年 10 月',
   /** 全部評價的外部連結（Google 地圖） */
   reviewUrl: attraction.mapsShareUrl,
   /** 地圖導航連結（Google 地圖） */
@@ -30,10 +30,10 @@ export const ratingSource = {
 
   /** 評分旁的小字來源說明 */
   inlineNote:
-    '評分與評價數同步自 Google 地圖（Google Maps）用戶評價 · 2026 年 9 月 · 點擊查看 Google 地圖全部評價↗',
+    '評分與評價數同步自 Google 地圖（Google Maps）用戶評價 · 2026 年 10 月 · 點擊查看 Google 地圖全部評價↗',
   /** 評價區塊的完整來源說明 */
   blockNote:
-    '同步自 Google 地圖用戶評價，同步時間 2026 年 9 月；版權歸原作者與 Google 地圖所有。',
+    '同步自 Google 地圖用戶評價，同步時間 2026 年 10 月；版權歸原作者與 Google 地圖所有。',
   /** 補充：本站不轉載逐字評價 */
   excerptNote:
     '本站僅呈現 Google 地圖公開的評分與評價數量，不轉載逐字評價內容；完整評價請至 Google 地圖查看。',
